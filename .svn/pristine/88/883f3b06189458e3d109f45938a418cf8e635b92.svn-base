@@ -1,0 +1,177 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/WEB-INF/include/taglib.jsp" %>
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>领队管理</title>
+    <link rel="stylesheet" href="${ctx}/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${ctx}/css/pintuer.css">
+    <link rel="stylesheet" href="${ctx}/css/admin.css">
+    <script src="${ctx}/js/jquery.js"></script>
+    <script src="${ctx}/js/pintuer.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //点击删除前
+            $("a[href='#yes'], a[href='#no'], th:first, .ckb").hide();
+            //点击删除事件
+            $("a[href='#del']").css("color", "red")
+                .click(function () {
+                    $(this).hide();
+                    $("a[href='#yes'], a[href='#no'], th:first, .ckb").show();
+                });
+            //点击确认删除
+            $("a[href='#yes']").click(function () {
+                var intL = $("input:checked").length; // 获取所有复选框选中项
+                if (intL != 0) { // 如果有选中项
+                    alert("您确定要删除所选的领队吗？");
+                    document.delete.action = "${ctx}/leader/deleteLeader";
+                    document.delete.submit();
+                } else {
+                    alert("请先选中要删除的领队！");
+                }
+            });
+            //点击取消删除
+            $("a[href='#no']").click(function () {
+                $("a[href='#yes'], a[href='#no'], th:first, .ckb").hide();
+                $("a[href='#del']").show();
+            });
+            //全选复选框
+            $("input[value='all']").click(function () {
+                if (this.checked) { // 如果自己被选中
+                    $("input[type=checkbox]").prop("checked", true);
+                } else { // 如果自己没被选中
+                    $("input[type=checkbox]").prop("checked", false);
+                }
+            });
+        });
+        function page(n,s) {
+            $('#pageNumber').val(n);
+            $('#pageSize').val(s);
+            $('#searchForm').submit();
+            return false;
+        }
+
+        $(function () {
+            $("#getTable").click(function () {
+                window.open("${ctx}/leader/getLeaderExcel");
+            })
+        })
+
+    </script>
+    <style>
+        .dialog-body td {
+            border: none;
+        }
+
+        .panel-head {
+            overflow: hidden
+        }
+        .panel-head form{display: inline}
+        .panel-head strong {
+            line-height: 42px
+        }
+
+        .panel-head .input {
+            display: inline !important;
+            width: 15%;
+            margin-right: 5px;
+        }
+
+        ul.pagination > li > span, ul.pagination > li > a, ul.pagination > li.active > a, ul.pager > li > span {
+            cursor: pointer;
+        }
+
+        .input-page-div > input {
+            width: 5em;
+            height: 1.8em;
+            margin: 0.4em 0.2em 0.2em 0.2em;
+            text-align: center;
+        }
+
+        .input-page-div > .input-btn-xs {
+            margin-left: 1em;
+            font-size: 1em;
+            width: 3em;
+            background-color: #337ab7;
+            color: #fff;
+        }
+
+        .input-page-div {
+            display: inline-block;
+            margin-left: 1em;
+        }
+        table{margin-bottom: 0!important;}
+    </style>
+</head>
+<body>
+<div class="panel admin-panel">
+    <div class="panel-head">
+        <strong><span class="icon-flag"></span> 领队管理</strong>
+        <form:form id="searchForm" modelAttribute="user" action="${ctx}/leader/showIndex" method="post">
+            <input id="pageNumber" name="pageNumber" type="hidden" value="${pageInfo.pageNum}">
+            <input id="pageSize" name="pageSize" type="hidden" value="${pageInfo.pageSize}">
+            <button class="button border-blue float-right" type="submit">
+                查询 <span class="icon-search-plus"></span>
+            </button>
+            <input type="text" class="input float-right" name="phone" placeholder="输入手机号进行查询" value="${user.phone}"/>
+            <input type="text" class="input float-right" name="realName" placeholder="输入姓名进行查询" value="${user.realName}"/>
+            <button class="button border-blue float-right" type="button" id="getTable"
+                    style="margin-right: 5px">导出Excel表格</button>
+        </form:form>
+    </div>
+    <div class="padding border-bottom" style="overflow: hidden">
+        <span class="float-right">
+            <a style="margin-right: 20px" class="icon-plus-square-o" href="${ctx}/user/showPrepareLeader"> 添加领队</a>
+            <a class="icon-trash-o" href="#del" style="margin-right: 20px"> 删除领队</a>
+            <a href="#yes"> 确认删除</a>&nbsp;
+            <a href="#no" style="margin-right: 20px"> 取消删除</a>
+        </span>
+    </div>
+    <form name="delete">
+        <table class="table table-hover text-center">
+            <tr>
+                <th width="10%">
+                    全选 <input type="checkbox" value="all">
+                </th>
+                <th width="5%">序号</th>
+                <th width="10%">工号</th>
+                <th width="15%">昵称</th>
+                <th width="10%">真实姓名</th>
+                <th width="5%">性别</th>
+                <th width="5%">年龄</th>
+                <th width="10%">手机号码</th>
+                <th width="5%">评分</th>
+                <th width="10%">带队次数</th>
+                <th width="10%">查看</th>
+            </tr>
+
+            <c:forEach items="${pageInfo.list }" var="leader" varStatus="status">
+                <tr>
+                    <td class="ckb"><input type="checkbox" name="user_id" value="${leader.id}"/></td>
+                    <td>${status.index+1+(pageInfo.pageNum-1)*pageInfo.pageSize}</td>
+                    <td>${leader.workNo}</td>
+                    <td>${leader.nickName}</td>
+                    <td>${leader.realName}</td>
+                    <td>${fns:getDictLabel('sex',leader.sex,'')}</td>
+                    <td>${leader.age}</td>
+                    <td>${leader.phone}</td>
+                    <td><fmt:formatNumber value="${leader.score}" pattern="#.0#"/></td>
+                    <td>${leader.leaderNum}</td>
+                    <td>
+                        <a href="${ctx}/leader/showDetail?userId=${leader.id}">详细信息</a>
+                    </td>
+                </tr>
+
+            </c:forEach>
+        </table>
+    </form>
+</div>
+<div>
+    <%@ include file="/WEB-INF/include/pagehelper.jsp"%>
+</div>
+</body>
+</html>

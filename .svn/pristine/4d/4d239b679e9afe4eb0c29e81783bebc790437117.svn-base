@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>更多分类</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="海浪山风休闲户外旅游在线平台">
+    <link rel="stylesheet" href="../css/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.min.css">
+    <style>
+        body{background: #eee;padding-bottom: 60px;font-size: 14px}
+        .weui-tabbar__icon {width: 22px;height: 22px}
+        .weui-tabbar__label{font-size: 12px}
+        .weui-flex {background: #ffffff;padding:8px}
+        .weui-flex p {font-size: 12px;}
+        .weui-grid {padding: 8px;width: 25%}
+        .my-flex .weui-grid{width: 20%}
+        .weui-grids:before, .weui-grids:after,.weui-grid:before, .weui-grid:after {border: none}
+        .my-title{text-align: center;line-height: 40px;background: #fafafa}
+        .my-title{margin-top: 10px}
+        .my-flex .weui-grid__icon{width: 36px;height: 36px}
+        .my-flex p{color: #999999}
+        .province .weui-grid__icon{width: 50px;height: 50px}
+        /*.province .js_grid{padding-top: 0}*/
+        .wrap .weui-grid__label{margin-top: 2px}
+        .wrap .weui-grid{padding: 6px}
+        .weui-tabbar{position: fixed;bottom: 0}
+    </style>
+</head>
+<body>
+<!--项目分类-->
+<div class="wrap">
+    <div class="my-title">
+        <div class="weui-flex__item">
+            <b>> 项目分类 <</b>
+        </div>
+    </div>
+    <div class="weui-flex">
+        <div class="weui-flex__item weui-grids">
+            <a href="index-sort-project.html#tab1" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-tubu.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    徒步
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab2" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-dengshan.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    登山
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab3" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-panyan.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    攀岩
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab4" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-pihua.png" style="width: auto">
+                </div>
+                <p class="weui-grid__label">
+                    皮划艇
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab5" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-hongkong.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    香港岛
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab6" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-luying.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    露营
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab7" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-huaxue.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    滑雪
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab8" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-meishi.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    美食
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab9" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-zijia.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    自驾
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab10" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-qixing.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    骑行
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab11" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-paishe.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    拍摄
+                </p>
+            </a>
+            <a href="index-sort-project.html#tab12" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <img src="../images/sort-haidao.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    海岛
+                </p>
+            </a>
+        </div>
+    </div>
+</div>
+<!--活动天数-->
+<div class="my-title">
+    <b>> 活动天数 <</b>
+</div>
+<div class="weui-flex my-flex">
+    <div class="weui-flex__item weui-grids">
+        <a href="index-sort-day.html#tab1" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/day-01.png" alt="">
+            </div>
+            <p class="weui-grid__label">
+                1 天
+            </p>
+        </a>
+        <a href="index-sort-day.html#tab2" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/day-02.png" alt="">
+            </div>
+            <p class="weui-grid__label">
+                2 天
+            </p>
+        </a>
+        <a href="index-sort-day.html#tab3" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/day-03.png" alt="">
+            </div>
+            <p class="weui-grid__label">
+                3 天
+            </p>
+        </a>
+        <a href="index-sort-day.html#tab4" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/day-04.png" style="width: auto">
+            </div>
+            <p class="weui-grid__label">
+                4 天
+            </p>
+        </a>
+        <a href="index-sort-day.html#tab5" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/day-05.png" style="width: auto">
+            </div>
+            <p class="weui-grid__label">
+                5天以上
+            </p>
+        </a>
+    </div>
+</div>
+<!--难度等级-->
+<div class="my-title">
+    <b>> 难度等级 <</b>
+</div>
+<div class="weui-flex my-flex">
+    <div class="weui-flex__item weui-grids">
+        <a href="index-sort-level.html#tab1" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/level-01.png" alt="">
+            </div>
+            <p class="weui-grid__label">
+                1 星
+            </p>
+        </a>
+        <a href="index-sort-level.html#tab2" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/level-02.png" alt="">
+            </div>
+            <p class="weui-grid__label">
+                2 星
+            </p>
+        </a>
+        <a href="index-sort-level.html#tab3" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/level-03.png" alt="">
+            </div>
+            <p class="weui-grid__label">
+                3 星
+            </p>
+        </a>
+        <a href="index-sort-level.html#tab4" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/level-04.png" style="width: auto">
+            </div>
+            <p class="weui-grid__label">
+                4 星
+            </p>
+        </a>
+        <a href="index-sort-level.html#tab5" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/level-05.png" style="width: auto">
+            </div>
+            <p class="weui-grid__label">
+                5 星
+            </p>
+        </a>
+    </div>
+</div>
+<!--国内游-->
+<div class="my-title">
+    <b>> 国内游 <</b>
+</div>
+<div class="weui-flex province">
+    <div class="weui-flex__item weui-grids">
+        <a href="index-sort-province.html#tab1" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/pro-guangdong.png" alt="">
+            </div>
+            <p class="weui-grid__label">
+                广东
+            </p>
+        </a>
+        <a href="index-sort-province.html#tab2" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/pro-guangxi.png" alt="">
+            </div>
+            <p class="weui-grid__label">
+                广西
+            </p>
+        </a>
+        <a href="index-sort-province.html#tab3" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/pro-yunnan.png" alt="">
+            </div>
+            <p class="weui-grid__label">
+                云南
+            </p>
+        </a>
+        <a href="index-sort-province.html#tab4" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img src="../images/pro-sichuan.png" style="width: auto">
+            </div>
+            <p class="weui-grid__label">
+                四川
+            </p>
+        </a>
+    </div>
+</div>
+<!--底部导航栏-->
+<div class="weui-tabbar">
+    <a href="../index.html" class="weui-tabbar__item">
+        <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 1.5em;">8</span>-->
+        <div class="weui-tabbar__icon">
+            <img src="../images/nav-home.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">首页</p>
+    </a>
+    <a href="../society.html" class="weui-tabbar__item">
+        <div class="weui-tabbar__icon">
+            <img src="../images/nav-society.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">社区</p>
+    </a>
+    <a href="../outdoor.html" class="weui-tabbar__item">
+        <div class="weui-tabbar__icon">
+            <img src="../images/nav-out.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">户外学堂</p>
+    </a>
+    <a href="../mine.html" class="weui-tabbar__item">
+        <div class="weui-tabbar__icon">
+            <img src="../images/nav-mine.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">我的</p>
+    </a>
+</div>
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    })
+</script>
+</body>
+</html>

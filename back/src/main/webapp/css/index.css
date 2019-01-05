@@ -1,0 +1,147 @@
+/*禁止鼠标选中文本复制*/
+body {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+/*隐藏滚动条*/
+body::-webkit-scrollbar {
+    display: none
+}
+
+body {
+    background: #eeeeee;
+    line-height: inherit;
+    max-width: 500px;
+    margin: 0 auto;
+}
+.weui-navbar{max-width: 500px}
+.weui-tabbar{position: fixed;bottom: 0;max-width: 500px}
+a{color: #000}
+.weui-cells{font-size: 14px}
+/*body p, a { font-size: 12px !important; }*/
+
+/*首页part1-焦点图*/
+.swiper-slide img {
+    width: 100%; /*屏幕宽度*/
+}
+
+/*首页part2-内容导航*/
+p.weui-grid__label {
+    font-size: 12px;color: #333
+}
+.weui-grids:before, .weui-grids:after,.weui-grid:before, .weui-grid:after {
+    border: none;
+}
+
+/*首页part4-活动焦点图*/
+.weui-tab {margin-top: 7px;}
+
+a.weui-navbar__item {font-size: 14px}
+
+.weui-navbar__item.weui-bar__item--on {
+    color: #37a1ff;
+    background: inherit;
+    border-bottom: 2px solid #37a1ff;
+}
+
+.weui-navbar__item:after {border-right: none}
+
+.weui-flex__item p {font-size: 12px}
+
+/*底部导航label高亮*/
+.weui-tabbar__item.weui-bar__item--on .weui-tabbar__label {
+    color: #37a1ff;
+}
+
+.weui-tabbar__icon {
+    width: 22px;
+    height: 22px;
+}
+
+.weui-tabbar__label{font-size: 12px}
+
+/******************/
+/*首页分类导航活动项*/
+.my-item {
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding: 10px 10px 5px 10px;
+    background-color: #ffffff
+}
+
+/*活动图片*/
+.my-pic .weui-flex__item {
+    position: relative;
+    z-index: 0;
+    min-height: 100px;
+}
+
+.my-pic img {width: 100%}
+
+/*活动标题*/
+.my-title {
+    background: linear-gradient(transparent,rgba(0,0,0,.2) 20%,
+    rgba(0,0,0,.4) 50%,rgba(0,0,0,.6) 75%,rgba(0,0,0,.8));
+    padding: 5px 15px;
+    margin-top: -41px;
+    line-height: 28px;
+    color: #ffffff;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+/*活动详细信息*/
+.my-detail,.my-spread-down,.my-spread-up{
+    font-size: 12px;
+    margin-top: 3px;
+    line-height: 30px;
+    text-align: center;
+    color: #333;
+}
+/*点击展开与收起*/
+.my-spread-down,.my-spread-up{color:#679aff}
+/*活动状态*/
+.my-status-1,.my-status-2,.my-status-3,.my-status-4,.my-status-5{
+    color: #ffffff;
+    padding:0 5px;
+    border-radius: 3px;
+}
+.my-status-1{background: #679aff}   /*未成行*/
+.my-status-2{background: #4cd964}   /*已成行*/
+.my-status-3{background: orange}    /*活动中*/
+.my-status-4{background: #ff333b}   /*已满人*/
+.my-status-5{background: #cccccc}   /*已结束*/
+
+/*隐藏活动*/
+.my-hidden,.my-spread-up{display: none}
+/*底部提示*/
+.weui-loadmore a {color: #679aff}
+.page-title {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: 500px;
+    z-index: 999;
+    background: #679aff;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 0;
+    text-align: center;
+}
+.return {
+    position: absolute;
+    left: 10px;
+    width: 20px;
+    height: 20px;
+    background: url("../images/return.png");
+    background-size: cover;
+}
+.go-home{
+    position: absolute;
+    right: 10px;
+    width: 22px;
+    height: 22px;
+}

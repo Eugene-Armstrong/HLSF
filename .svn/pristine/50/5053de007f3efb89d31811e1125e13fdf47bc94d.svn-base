@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.bnuz.seawas.dao.CityProMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.bnuz.seawas.entity.CityPro" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="cityId" property="cityId" jdbcType="VARCHAR" />
+    <result column="productId" property="productId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cityId, productId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_citypro
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_citypro
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.bnuz.seawas.entity.CityPro" >
+    insert into t_citypro (id, cityId, productId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{cityId,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.bnuz.seawas.entity.CityPro" >
+    insert into t_citypro
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityId != null" >
+        cityId,
+      </if>
+      <if test="productId != null" >
+        productId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.bnuz.seawas.entity.CityPro" >
+    update t_citypro
+    <set >
+      <if test="cityId != null" >
+        cityId = #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null" >
+        productId = #{productId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.bnuz.seawas.entity.CityPro" >
+    update t_citypro
+    set cityId = #{cityId,jdbcType=VARCHAR},
+      productId = #{productId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 通过城市id删除数据 -->
+  <delete id="deleteByCityId">
+    DELETE FROM t_citypro
+    WHERE cityId = #{cityId}
+  </delete>
+  <!-- 通过产品id删除数据 -->
+  <delete id="deleteByProductId">
+    DELETE FROM t_citypro
+    WHERE productId = #{productId}
+  </delete>
+
+  <!--
+          wifi：根据产品id获取城市信息
+  -->
+  <select id="selectCityProByProductId" resultType="cn.edu.bnuz.seawas.entity.City">
+    SELECT t_city.*
+      FROM t_city,t_citypro WHERE t_citypro.productId = #{productId} AND t_city.id = t_citypro.cityId
+  </select>
+</mapper>

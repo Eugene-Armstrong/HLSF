@@ -1,0 +1,16 @@
+package cn.edu.bnuz.seawas.controller.weChat.society;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * Created by Zrj on 2017/8/31.
+ */
+@Controller
+@RequestMapping("/wechat/journey")
+public class JourneyContoller {
+    @RequestMapping("showJourneyList")
+    public String showJourneyList(){
+        return "wechat/society/society-journeyList";
+    }
+}

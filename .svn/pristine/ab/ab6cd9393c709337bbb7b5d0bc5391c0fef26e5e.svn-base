@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>评论详情</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="海浪山风休闲户外旅游在线平台">
+    <link rel="stylesheet" href="../css/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.min.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <style>
+        body {
+            font-size: 3vw;
+            padding-top: 50px;
+            padding-bottom: 60px;
+        }
+        .weui-cell_link{
+            color: #679aff;
+            font-size: 3vw;
+            padding:4vw;
+        }
+        .fl-right{float: right}
+        .my-detail{color: #999}
+        .weui-panel__hd{background: #fff}
+        .user {
+            position: relative;
+            padding: 20px 0;
+            background: #fff;
+        }
+        .user-info {
+            position: absolute;
+            width: 25%;
+            text-align: center;
+        }
+        .user-img {
+            border-radius: 50%;
+            width: 50px;
+        }
+        .user-name,.comment-content {
+            position: relative;
+            margin-left: 25%;
+            padding-right:10px;
+            font-size: 14px;
+        }
+        .user-name {
+            line-height: 30px;
+        }
+        .user-score {
+            height: 12px;
+            margin-top: 7px;
+        }
+        .comment-detail {
+            float: right;
+            line-height: 25px;
+            color: #999;
+            font-size: 12px;
+        }
+        .weui-tabbar{position: fixed;border-bottom: 0}
+    </style>
+</head>
+<body>
+<div class="page-title">
+    <a href="javascript:history.back()" class="return"></a>
+    评价详情
+    <a href="../index.html"><img src="../images/topbar-home.png" class="go-home"></a>
+</div>
+<div class="weui-panel__hd">
+    我的评论<span class="comment-detail">2017-09-26 23:30：00</span>
+</div>
+<div class="user">
+    <div class="user-info">
+        <a href="../mine.html">
+            <img src="../images/head-img.jpg" class="user-img" alt="">
+        </a>
+    </div>
+    <div class="user-name"><b>用户名</b></div>
+    <div class="comment-content">这是评论内容这是评论内容<br>
+        <img src="../images/star-on.png" class="user-score">
+        <img src="../images/star-on.png" class="user-score">
+        <img src="../images/star-on.png" class="user-score">
+        <img src="../images/star-on.png" class="user-score">
+        <img src="../images/star-on.png" class="user-score"><br>
+    </div>
+</div>
+<!--导航推荐-->
+<div class="weui-panel weui-panel_access">
+    <div class="weui-panel__ft">
+        <a href="../index/index-sort.html" class="weui-cell weui-cell_access weui-cell_link">
+            <div class="weui-cell__bd">
+                <span>
+                    海浪山风 <b>·</b> 更多分类
+                </span>
+                <span class="fl-right">更多惊喜</span>
+            </div>
+            <span class="weui-cell__ft"></span>
+        </a>
+    </div>
+</div>
+<div class="weui-panel weui-panel_access">
+    <div class="weui-panel__ft">
+        <a href="../index/index-zxhd.html" class="weui-cell weui-cell_access weui-cell_link">
+            <div class="weui-cell__bd">
+                <span>
+                    海浪山风 <b>·</b> 最新活动
+                    <span class="my-status-2">New</span>
+                </span>
+                <span class="fl-right">查看更多</span>
+            </div>
+            <span class="weui-cell__ft"></span>
+        </a>
+    </div>
+</div>
+<div class="weui-panel weui-panel_access">
+    <div class="weui-panel__ft">
+        <a href="../society/society-journeyList.html" class="weui-cell weui-cell_access weui-cell_link">
+            <div class="weui-cell__bd">
+                <span>海浪山风 <b>·</b> 好玩游记</span>
+                <span class="fl-right">查看更多</span>
+            </div>
+            <span class="weui-cell__ft"></span>
+        </a>
+    </div>
+</div>
+<div class="weui-panel weui-panel_access">
+    <div class="weui-panel__ft">
+        <a href="../index/index-calender.html" class="weui-cell weui-cell_access weui-cell_link">
+            <div class="weui-cell__bd">
+                <span>海浪山风 <b>·</b> 活动日历</span>
+                <span class="fl-right">查看更多</span>
+            </div>
+            <span class="weui-cell__ft"></span>
+        </a>
+    </div>
+</div>
+<!--底部导航栏-->
+<div class="weui-tabbar">
+    <a href="../index.html" class="weui-tabbar__item">
+        <div class="weui-tabbar__icon">
+            <img src="../images/nav-home.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">首页</p>
+    </a>
+    <a href="../society.html" class="weui-tabbar__item">
+        <div class="weui-tabbar__icon">
+            <img src="../images/nav-society.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">社区</p>
+    </a>
+    <a href="../outdoor.html" class="weui-tabbar__item">
+        <div class="weui-tabbar__icon">
+            <img src="../images/nav-out.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">户外学堂</p>
+    </a>
+    <a href="../mine.html" class="weui-tabbar__item">
+        <div class="weui-tabbar__icon">
+            <img src="../images/nav-mine.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">我的</p>
+    </a>
+</div>
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<script src="../js/swiper.min.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+        $(".swiper-container").swiper({
+            slidesPerView: 2
+        });
+    })
+</script>
+</body>
+</html>

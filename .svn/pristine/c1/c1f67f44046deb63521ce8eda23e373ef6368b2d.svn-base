@@ -1,0 +1,140 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/WEB-INF/include/taglib.jsp" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>游记</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="海浪山风休闲户外旅游在线平台">
+    <link rel="stylesheet" href="${ctx}/css/weui.min.css">
+    <link rel="stylesheet" href="${ctx}/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="${ctx}/css/index.css">
+    <style>
+        body{
+            background: #fafafa;
+            font-size: 14px;
+            padding-bottom: 25px;
+        }
+
+        .journey{padding:0 20px 25px 20px;}
+        .my-title{
+            background: #fafafa;
+            color: #000000;
+            margin: 5px 0;
+            font-size: 18px;
+            text-align: left;
+            z-index: -1;
+        }
+        .my-info{
+            height: 50px;
+            color: #333;
+            line-height: 20px
+        }
+        .my-info p{padding: 6px 0}
+        .my-info span{color: #999;font-size: 12px}
+        .head-img{
+            float: left;
+            margin-right: 5px;
+            width: 48px;
+            height: 48px;
+            vertical-align: middle;
+            border-radius: 50%;
+        }
+        .my-content p{margin: 10px 0;color: #666666;line-height: 22px}
+        .my-content img{width: 100%;margin-top: 10px}
+        .weui-tabbar__item{padding: 10px 0}
+        .weui-tabbar__icon,.weui-tabbar__label{display: inline-block;vertical-align: middle;}
+        .weui-tabbar__label{font-size: 14px;margin-left: 10px}
+        /*底部提示*/
+        .weui-loadmore{margin-top: 10px}
+        .weui-loadmore a {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<!--游记封面-->
+<div class="weui-flex">
+    <div class="weui-flex__item">
+        <img src="${ctx}/photo/travelNote/${travelNoteAndUser.picUrl}" style="width: 100%">
+    </div>
+</div>
+<!--游记内容-->
+<div class="journey">
+    <div class="my-title">${travelNoteAndUser.title}</div>
+    <div class="my-info">
+        <img src="${travelNoteAndUser.user.headImgUrl}" class="head-img">
+        <p>${travelNoteAndUser.user.nickName}<br><span>${travelNoteAndUser.createTime}&nbsp;&nbsp;&nbsp;&nbsp;浏览${travelNoteAndUser.browseTimes}</span></p>
+    </div>
+    <div class="my-content">
+        ${travelNoteAndUser.content}
+        <%--<img src="${ctx}/images/tmp-03.jpg" alt="">--%>
+        <%--<p>--%>
+            <%--马尔代夫全称：马尔代夫共和国（原名马尔代夫群岛，1968年11月改为现名）位于南亚,--%>
+            <%--是印度洋上的一个岛国，也是世界上最大的珊瑚岛国。<br><br>--%>
+            <%--由1200余个小珊瑚岛屿组成，其中202个岛屿有人居住，从空中鸟瞰就像一串珍珠撒在印度洋上。--%>
+            <%--面积298平方公里（不计算领海），是亚洲最小的国家。--%>
+        <%--</p>--%>
+        <%--<img src="${ctx}/images/tmp-03.jpg" alt="">--%>
+        <%--<p>--%>
+            <%--马尔代夫全称：马尔代夫共和国（原名马尔代夫群岛，1968年11月改为现名）位于南亚,--%>
+            <%--是印度洋上的一个岛国，也是世界上最大的珊瑚岛国。<br><br>--%>
+            <%--由1200余个小珊瑚岛屿组成，其中202个岛屿有人居住，从空中鸟瞰就像一串珍珠撒在印度洋上。--%>
+            <%--面积298平方公里（不计算领海），是亚洲最小的国家。--%>
+        <%--</p>--%>
+        <%--<img src="${ctx}/images/tmp-03.jpg" alt="">--%>
+    </div>
+    <div class="weui-loadmore">
+        <a href="society-journeyList.html">您已阅读完毕，去看看更多好玩游记吧~</a>
+    </div>
+</div>
+<!--底部导航栏-->
+<div class="weui-tabbar">
+    <a href="${ctx}/wechat/index/show?cityId=${sessionScope.currentCity.id}" class="weui-tabbar__item">
+        <div class="weui-tabbar__icon">
+            <img src="${ctx}/images/nav-home.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">回到首页</p>
+    </a>
+    <a class="weui-tabbar__item" id="like">
+        <div class="weui-tabbar__icon">
+            <img src="${ctx}/images/no-collected.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">点赞（+<span id="likeNum">${travelNoteAndUser.appreciation}</span>）</p>
+    </a>
+</div>
+<script src="${ctx}/js/jquery-3.2.0.min.js"></script>
+<script src="${ctx}/js/jquery-weui.min.js"></script>
+<script src="${ctx}/js/fastclick.js"></script>
+<script>
+    $(function () {
+        var req;
+        FastClick.attach(document.body);
+        $("#like").click(function () {
+            var self = $(this);
+            if(req == null){
+                req = $.ajax({
+                    type: 'post',
+                    url: '${ctx}/wechat/journey/journeyAppreciatied', // 请求处理页
+                    dataType: 'json',
+                    data:{id: '${travelNoteAndUser.id}', userId: '${sessionScope.userInfo.id}'},
+                    success: function (data) {
+                        //点赞成功之后
+                        var num = parseInt($("#likeNum").text())+1;
+                        self.find("img").attr("src","${ctx}/images/collected.png");
+                        self.find("p").html("已赞（+<span id='likeNum'>"+num+"</span>）");
+                        $.toast("点赞成功+1");
+                        self.unbind();
+                    },
+                    error: function (e) {
+                        alert("系统繁忙");
+                    }
+                });
+            }
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.edu.bnuz.seawas.dao.ActivityMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.bnuz.seawas.entity.Activity" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="productId" property="product.id" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="INTEGER" />
+    <result column="departTime" property="departTime" jdbcType="TIMESTAMP" />
+    <result column="gatherPlace" property="gatherPlace" jdbcType="VARCHAR" />
+    <result column="tripNumber" property="tripNumber" jdbcType="INTEGER" />
+    <result column="totalNumber" property="totalNumber" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="QRCode" property="QRCode" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="createUser" property="createUser.id" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updateUser" property="updateUser.id" jdbcType="VARCHAR" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="closeTime" property="closeTime" jdbcType="TIMESTAMP" />
+    <result column="onSalePrice" property="onSalePrice" jdbcType="INTEGER" />
+    <result column="discountRules" property="discountRules" jdbcType="LONGVARCHAR" />
+    <result column="priceIntroduce" property="priceIntroduce" jdbcType="LONGVARCHAR" />
+    <result column="route" property="route" jdbcType="LONGVARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="productIntroduce" property="productIntroduce" jdbcType="LONGVARCHAR" />
+    <result column="delFlag" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+
+  <resultMap id="calenderMap" type="cn.edu.bnuz.seawas.entity.Activity">
+    <id column="actId" property="id"/>
+    <result column="actProductId" property="product.id"/>
+    <result column="productName" property="product.name"/>
+    <result column="actPrice" property="price"/>
+    <result column="actDepartTime" property="departTime"/>
+    <result column="actGatherPlace" property="gatherPlace"/>
+    <result column="actTripNumber" property="tripNumber"/>
+    <result column="actTotalNumber" property="totalNumber"/>
+    <result column="actState" property="state"/>
+    <result column="actQRCode" property="QRCode"/>
+    <result column="actEndTime" property="endTime"/>
+    <result column="actCloseTime" property="closeTime"/>
+    <result column="actOnSalePrice" property="onSalePrice"/>
+    <result column="actCity" property="city"/>
+    <result column="actPriceIntroduce" property="priceIntroduce"/>
+    <result column="actRoute" property="route"/>
+    <result column="actProductIntroduce" property="productIntroduce"/>
+    <result column="actNum" property="num"/>
+    <result column="actDiscountRules" property="discountRules"/>
+
+    <!--
+        一个活动对应多个领队
+    -->
+    <collection property="activityLeaderList" ofType="cn.edu.bnuz.seawas.entity.ActivityLeader">
+      <id column="actLedId" property="id"/>
+      <result column="actId" property="activityId"/>
+      <result column="actLedLedid" property="leaderId"/>
+
+      <!-- 领队信息 -->
+      <association property="user" javaType="cn.edu.bnuz.seawas.entity.User">
+        <id column="actLedLedid" property="id"/>
+        <result column="userNickName" property="nickName"/>
+        <result column="userName" property="realName"/>
+        <result column="userWorkNo" property="workNo"/>
+        <result column="userScore" property="score"/>
+        <result column="userOpinionNum" property="opinionNum"/>
+        <result column="userHeadImgUrl" property="headImgUrl"/>
+      </association>
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    a.id,
+    a.productId AS "product.id",
+    a.price,
+    a.departTime,
+    a.gatherPlace,
+    a.tripNumber,
+    a.totalNumber,
+    a.state,
+    a.QRCode,
+    a.createTime,
+    a.createUser AS "createUser.id",
+    a.updateTime,
+    a.updateUser AS "updateUser.id",
+    a.endTime,
+    a.closeTime,
+    a.onSalePrice,
+    a.discountRules,
+    a.priceIntroduce,
+    a.route,
+    a.productIntroduce,
+    a.city,
+    a.delFlag
+  </sql>
+
+  <sql id="activityList" >
+    t_activity.id AS actId,
+    t_activity.productId AS actProductId,
+    t_product.name AS productName,
+    t_activity.price AS actPrice,
+    t_activity.departTime AS actDepartTime,
+    t_activity.gatherPlace AS actGatherPlace,
+    t_activity.tripNumber AS actTripNumber,
+    t_activity.totalNumber AS actTotalNumber,
+    t_activity.state AS actState,
+    t_activity.QRCode AS actQRCode,
+    t_activity.endTime AS actEndTime,
+    t_activity.closeTime AS actCloseTime,
+    t_activity.onSalePrice AS actOnSalePrice,
+    t_activity.priceIntroduce AS actPriceIntroduce,
+    t_activity.route AS actRoute,
+    t_activity.productIntroduce AS actProductIntroduce,
+    t_activity.discountRules AS actDiscountRules
+  </sql>
+
+  <sql id="activityLeaderList">
+    t_activityleader.id AS actLedId,
+    t_activityleader.leaderId AS actLedLedid
+  </sql>
+
+  <sql id="userList">
+    t_user.headImgUrl AS userHeadImgUrl,
+    t_user.nickName AS userNickName,
+    t_user.realName AS userName,
+    t_user.workNo AS userWorkNo,
+    t_user.score AS userScore,
+    t_user.opinionNum AS userOpinionNum,
+    t_user.leaderNum AS userLeaderNum
+  </sql>
+
+  <sql id="productJoinColumns">
+    p.name AS "product.name",
+    p.picUrl AS "product.picUrl",
+    p.degreeDifficulty AS "product.degreeDifficulty",
+    p.equipmentMessage AS "product.equipmentMessage"
+  </sql>
+
+  <sql id="productJoins">
+    LEFT JOIN t_product p ON a.productId = p.id
+  </sql>
+
+  <!--
+            wifi：通过产品id获得此产品下的所有活动
+  -->
+  <select id="selectActivitiesByProductId" resultType="cn.edu.bnuz.seawas.vo.ActivityDetailsVo">
+    select
+    <include refid="Base_Column_List" />
+    from t_activity a
+    <where>
+      <if test="product.id != null and product.id != ''">
+        a.productId = #{product.id}
+      </if>
+      AND a.delFlag = '0'
+    </where>
+    ORDER BY a.endTime DESC
+  </select>
+
+  <select id="getActivitySignNumber" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM t_sign WHERE t_sign.ordersId IN (SELECT id FROM t_orders WHERE activityId = #{activityId} AND (state = '2' OR state = '3'))
+  </select>
+
+  <!--
+            wifi：通过活动id获得所有信息
+  -->
+  <select id="get" resultType="cn.edu.bnuz.seawas.entity.Activity">
+    select 
+      <include refid="Base_Column_List" />,
+      <include refid="productJoinColumns" />
+    from t_activity a
+      <include refid="productJoins"/>
+    where a.id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <!--
+              wifi：批量删除活动（假删除）
+  -->
+  <update id="deleteActivitiesByActivityId">
+    UPDATE t_activity
+    SET delFlag = '1'
+    WHERE id IN
+    <foreach collection="activity" item="activity" open="(" separator="," close=")">
+      #{activity.id,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+
+  <update id="delete">
+    UPDATE t_activity
+    SET delFlag = '1'
+    WHERE id = #{id}
+  </update>
+
+  <select id="findList" resultType="cn.edu.bnuz.seawas.entity.Activity">
+    SELECT
+      <include refid="Base_Column_List"/>,
+    <include refid="productJoinColumns" />
+    FROM t_activity a
+      <include refid="productJoins"/>
+    <where>
+      <if test="delFlag != null and delFlag != ''">
+        a.delFlag = #{delFlag}
+      </if>
+      <if test="product != null">
+        <if test="product.id != null and product.id != ''">
+          AND a.productId = #{product.id}
+        </if>
+      </if>
+      <if test="departTime != null">
+        AND a.closeTime >= #{departTime}
+      </if>
+      <if test="city != null and city != ''" >
+        AND a.city in (#{city,jdbcType=VARCHAR},'')
+      </if>
+      AND  (a.state != '已结束' AND a.state != '活动中')
+    </where>
+    ORDER BY a.departTime ASC
+  </select>
+
+  <insert id="insert">
+    insert into t_activity (
+      id,
+      productId,
+      price,
+      departTime,
+      gatherPlace,
+      tripNumber,
+      totalNumber,
+      state,
+      QRCode,
+      createTime,
+      createUser,
+      updateTime,
+      updateUser,
+      endTime,
+      closeTime,
+      onSalePrice,
+      delFlag,
+      discountRules,
+      priceIntroduce,
+      route,
+      productIntroduce,
+      city
+      )
+    values (
+      #{id,jdbcType=VARCHAR},
+      #{product.id,jdbcType=VARCHAR},
+      #{price,jdbcType=INTEGER},
+      #{departTime,jdbcType=TIMESTAMP},
+      #{gatherPlace,jdbcType=VARCHAR},
+       #{tripNumber,jdbcType=INTEGER},
+      #{totalNumber,jdbcType=INTEGER},
+      #{state,jdbcType=VARCHAR},
+      #{QRCode,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{createUser.id,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP},
+      #{updateUser.id,jdbcType=VARCHAR},
+      #{endTime,jdbcType=TIMESTAMP},
+      #{closeTime,jdbcType=TIMESTAMP},
+      #{onSalePrice,jdbcType=INTEGER},
+      #{delFlag,jdbcType=CHAR},
+      #{discountRules,jdbcType=LONGVARCHAR},
+      #{priceIntroduce,jdbcType=LONGVARCHAR},
+      #{route,jdbcType=LONGVARCHAR},
+      #{productIntroduce,jdbcType=LONGVARCHAR},
+      #{city,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective">
+    insert into t_activity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="product.id != null" >
+        productId,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="departTime != null" >
+        departTime,
+      </if>
+      <if test="gatherPlace != null" >
+        gatherPlace,
+      </if>
+      <if test="tripNumber != null" >
+        tripNumber,
+      </if>
+      <if test="totalNumber != null" >
+        totalNumber,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="QRCode != null" >
+        QRCode,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="createUser.id != null" >
+        createUser,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="updateUser.id != null" >
+        updateUser,
+      </if>
+      <if test="endTime != null" >
+        endTime,
+      </if>
+      <if test="closeTime != null" >
+        closeTime,
+      </if>
+      <if test="onSalePrice != null" >
+        onSalePrice,
+      </if>
+      <if test="delFlag != null" >
+        delFlag,
+      </if>
+      <if test="discountRules != null" >
+        discountRules,
+      </if>
+      <if test="priceIntroduce != null" >
+        priceIntroduce,
+      </if>
+      <if test="route != null" >
+        route,
+      </if>
+      <if test="productIntroduce != null" >
+        productIntroduce,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="product.id != null" >
+        #{product.id,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="departTime != null" >
+        #{departTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gatherPlace != null" >
+        #{gatherPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="tripNumber != null" >
+        #{tripNumber,jdbcType=INTEGER},
+      </if>
+      <if test="totalNumber != null" >
+        #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="QRCode != null" >
+        #{QRCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser.id != null" >
+        #{createUser.id,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser.id != null" >
+        #{updateUser.id,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeTime != null" >
+        #{closeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="onSalePrice != null" >
+        #{onSalePrice,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="discountRules != null" >
+        #{discountRules,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="priceIntroduce != null" >
+        #{priceIntroduce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="route != null" >
+        #{route,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productIntroduce != null" >
+        #{productIntroduce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective">
+    update t_activity
+    <set >
+      <if test="product != null">
+        <if test="product.id != null and product.id != ''" >
+          productId = #{product.id,jdbcType=VARCHAR},
+        </if>
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="departTime != null" >
+        departTime = #{departTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gatherPlace != null" >
+        gatherPlace = #{gatherPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="tripNumber != null" >
+        tripNumber = #{tripNumber,jdbcType=INTEGER},
+      </if>
+      <if test="totalNumber != null" >
+        totalNumber = #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="QRCode != null" >
+        QRCode = #{QRCode,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        <if test="updateUser.id != null and updateUser.id != ''" >
+          updateUser = #{updateUser.id,jdbcType=VARCHAR},
+        </if>
+      </if>
+      <if test="endTime != null" >
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeTime != null" >
+        closeTime = #{closeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="onSalePrice != null" >
+        onSalePrice = #{onSalePrice,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        delFlag = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="discountRules != null and discountRules != ''">
+        discountRules = #{discountRules,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="priceIntroduce != null" >
+        priceIntroduce = #{priceIntroduce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="route != null" >
+        route = #{route,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productIntroduce != null" >
+        productIntroduce = #{productIntroduce,jdbcType=LONGVARCHAR},
+      </if>
+      city = #{city,jdbcType=VARCHAR}
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey">
+    update t_activity
+    set productId = #{product.id,jdbcType=VARCHAR},
+      price = #{price,jdbcType=INTEGER},
+      departTime = #{departTime,jdbcType=TIMESTAMP},
+      gatherPlace = #{gatherPlace,jdbcType=VARCHAR},
+      tripNumber = #{tripNumber,jdbcType=INTEGER},
+      totalNumber = #{totalNumber,jdbcType=INTEGER},
+      state = #{state,jdbcType=VARCHAR},
+      QRCode = #{QRCode,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      createUser = #{createUser.id,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      updateUser = #{updateUser.id,jdbcType=VARCHAR},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      closeTime = #{closeTime,jdbcType=TIMESTAMP},
+      onSalePrice = #{onSalePrice,jdbcType=INTEGER},
+      delFlag = #{delFlag,jdbcType=CHAR},
+      discountRules = #{discountRules,jdbcType=LONGVARCHAR},
+      priceIntroduce = #{priceIntroduce,jdbcType=LONGVARCHAR},
+      route = #{route,jdbcType=LONGVARCHAR},
+      productIntroduce = #{productIntroduce,jdbcType=LONGVARCHAR},
+      city = #{city,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!--
+    通过领队id查找领队所带活动
+  -->
+  <select id="selectActivitiesByLeaderId" resultType="cn.edu.bnuz.seawas.vo.LeaderActivityVo">
+    SELECT
+		t_activity.id,
+		t_activity.productId AS "product.id",
+		t_product.picUrl AS "product.picUrl",
+		t_product.`name` AS pro_name,
+        t_activity.price,
+		t_activity.departTime,
+		t_activity.gatherPlace,
+		t_activity.tripNumber,
+		t_activity.totalNumber,
+        t_activity.state,
+		t_activity.closeTime,
+		t_activity.endTime,
+		t_activity.QRCode
+    FROM
+    t_activity,t_product,t_activityleader,t_user
+    WHERE
+    t_activity.productId = t_product.id
+		AND t_activityleader.activityId = t_activity.id
+    AND t_activityleader.leaderId = t_user.id
+    AND t_user.id = #{id,jdbcType=VARCHAR}
+    AND t_activity.delFlag != '1'
+    ORDER BY t_activity.state DESC
+  </select>
+
+  <!--通过用户id获取用户参与的活动-->
+  <select id="selectActivityByUserId" resultType="cn.edu.bnuz.seawas.entity.Activity">
+    select
+    <include refid="Base_Column_List" />,
+    <include refid="productJoinColumns" />
+    from t_activity a
+    <include refid="productJoins"/>
+     INNER JOIN t_orders o ON a.id = o.activityId
+    where o.userid = #{userId,jdbcType=VARCHAR}
+    AND o.delFlag = '0'
+    ORDER BY a.createTime DESC
+  </select>
+
+    <!--通过领队id获取领队带队的活动(不包含已结束和过了结束报名时间的)-->
+    <select id="selectActivityByLeader" resultType="cn.edu.bnuz.seawas.entity.Activity">
+        select
+        <include refid="Base_Column_List" />,
+        <include refid="productJoinColumns" />
+        from t_activity a
+        <include refid="productJoins"/>
+        INNER JOIN t_activityleader al ON al.activityId = a.id
+        where
+        a.delFlag = '0'
+        AND al.leaderId = #{leaderId,jdbcType=VARCHAR}
+        AND a.state != '已结束'
+        <if test="city != null and city != ''" >
+        AND a.city = #{city,jdbcType=VARCHAR}
+        </if>
+        AND DATEDIFF(a.closeTime,CURRENT_TIME) >= 0
+        AND p.delFlag = '0'
+    </select>
+
+  <!--找到所有Activities包括leaderId
+     不包含已结束和过了结束报名时间的
+     领队资料用到
+   -->
+  <select id="selectActivitiesWithLeader" resultType="cn.edu.bnuz.seawas.vo.LeaderActivityVo">
+    SELECT
+    t_activity.id,
+    t_activity.productId AS "product.id",
+    t_product.name AS "product.name",
+    t_product.picUrl AS "product.picUrl",
+    t_product.`name` AS pro_name,
+    t_activity.price,
+    t_activity.departTime,
+    t_activity.gatherPlace,
+    t_activity.tripNumber,
+    t_activity.totalNumber,
+    t_activity.state,
+    t_activity.closeTime,
+    t_activity.endTime,
+    t_activity.QRCode,
+    t_user.id AS "leader.id",
+    t_user.headImgUrl AS "leader.headImgUrl",
+    t_user.nickName AS "leader.nickName"
+    FROM
+    t_activity,t_product,t_activityleader,t_user
+    WHERE
+    t_activity.productId = t_product.id
+    AND t_activity.state != '已结束'
+    AND DATEDIFF(t_activity.closeTime,CURRENT_TIME) >= 0
+    AND t_activityleader.activityId = t_activity.id
+    AND t_activityleader.leaderId = t_user.id
+    AND t_activity.delFlag != '1'
+    <if test="city != null" >
+      AND t_activity.city in (#{city,jdbcType=VARCHAR},'')
+    </if>
+    ORDER BY t_activity.state DESC
+  </select>
+
+  <!-- 查询当期城市所有活动的出发日期
+       主要用于微信端的活动日历
+  -->
+  <select id="findAllDepartDate" resultType="java.lang.String">
+    SELECT DISTINCT(departTime)
+    FROM t_activity, t_citypro, t_product
+    WHERE t_activity.delFlag = '0'
+    AND t_citypro.productId = t_product.id
+    AND t_product.delFlag = '0'
+    AND t_activity.productId = t_citypro.productId
+    AND t_citypro.cityId = #{cityId}
+    AND t_activity.state != '未发布'
+    AND (
+        t_activity.city = #{cityId}
+        OR
+        t_activity.city = ''
+    )
+  </select>
+
+  <!-- 查询根据日期查询当天的活动 -->
+  <select id="findActivityByDate" resultMap="calenderMap">
+    SELECT
+      t_product.*,
+      <include refid="activityList" />,
+      <include refid="activityLeaderList" />,
+      <include refid="userList" />
+    FROM t_activity, t_activityleader, t_user, t_product
+    WHERE t_activity.departTime LIKE concat(#{date}, '%')
+    AND t_activity.productId = t_product.id
+    AND t_activity.city = #{cityId}
+    AND t_activity.delFlag = '0'
+    AND t_activityleader.activityId = t_activity.id
+    AND t_activityleader.leaderId = t_user.id
+    AND t_activity.state != '未发布'
+    AND (
+        t_activity.city = #{cityId}
+        OR
+        t_activity.city = ''
+    )
+  </select>
+
+  <select id="getActivityDetail" resultType="cn.edu.bnuz.seawas.entity.Activity">
+    SELECT *
+      FROM t_activity
+        WHERE id = #{activityId}
+  </select>
+
+  <update id="changeActivityState">
+    update t_activity set state = #{state} where id = #{id};
+  </update>
+
+  <!-- 将活动发布：改成未成行 -->
+  <update id="changeActivityType">
+    UPDATE t_activity SET state = '未成行' WHERE id = #{id};
+  </update>
+
+  <select id="findListByDays" resultType="cn.edu.bnuz.seawas.entity.Activity">
+    SELECT
+    <include refid="Base_Column_List"/>,
+    <include refid="productJoinColumns" />
+    FROM t_activity a
+    <include refid="productJoins"/>
+    <where>
+      <if test="delFlag != null and delFlag != ''">
+        a.delFlag = #{delFlag}
+      </if>
+      <if test="product != null">
+        <if test="product.id != null and product.id != ''">
+          AND a.productId = #{product.id}
+        </if>
+      </if>
+      <if test="departTime != null">
+        AND a.closeTime >= #{departTime}
+      </if>
+      <if test="days != null">
+        <choose>
+          <when test="days != 5">
+            AND (datediff(a.endTime,a.departTime) + 1) = #{days}
+          </when>
+          <otherwise>
+            AND (datediff(a.endTime,a.departTime) + 1) >= #{days}
+          </otherwise>
+        </choose>
+      </if>
+      <if test="city != null and city != ''" >
+        AND a.city in (#{city,jdbcType=VARCHAR},'')
+      </if>
+    </where>
+    ORDER BY a.departTime ASC
+  </select>
+  
+  <!--
+          wifi：通过活动id获取活动状态
+  -->
+  <select id="getActivityStateById" resultType="java.lang.String">
+    SELECT
+      state
+      FROM t_activity
+      WHERE id = #{id}
+  </select>
+
+  <!--
+    查询已经到了活动结束时间的活动
+    主要用于计时器
+  -->
+  <select id="findEndTimeActivity" resultType="cn.edu.bnuz.seawas.entity.Activity">
+    SELECT
+      <include refid="Base_Column_List"/>,
+      <include refid="productJoinColumns" />
+    FROM t_activity a
+      <include refid="productJoins"/>
+    <where>
+      a.endTime LIKE concat(#{endTime}, '%')
+    </where>
+  </select>
+</mapper>

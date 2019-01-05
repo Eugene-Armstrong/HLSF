@@ -1,0 +1,164 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/WEB-INF/include/taglib.jsp" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>游记</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="海浪山风休闲户外旅游在线平台">
+    <link rel="stylesheet" href="${ctx}/css/weui.min.css">
+    <link rel="stylesheet" href="${ctx}/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="${ctx}/css/index.css">
+    <style>
+        body{
+            background: #fff;
+            font-size: 14px;
+            padding-bottom: 25px;
+        }
+
+        .journey{padding:0 20px 25px 20px;}
+        .my-title{
+            background: #fafafa;
+            color: #000000;
+            margin: 5px 0;
+            font-size: 18px;
+            text-align: left;
+            z-index: -1;
+        }
+        .my-info{
+            height: 50px;
+            color: #333;
+            line-height: 20px
+        }
+        .my-info p{padding: 6px 0}
+        .my-info span{color: #999;font-size: 12px}
+        .head-img{
+            float: left;
+            margin-right: 5px;
+            width: 48px;
+            height: 48px;
+            vertical-align: middle;
+            border-radius: 50%;
+        }
+        .my-content p{margin: 10px 0;color: #666666;line-height: 22px}
+        .my-content img{width: 100%;margin-top: 10px}
+        .weui-tabbar__item{padding: 10px 0}
+        .weui-tabbar__icon,.weui-tabbar__label{display: inline-block;vertical-align: middle;}
+        .weui-tabbar__label{font-size: 14px;margin-left: 10px}
+        /*底部提示*/
+        .weui-loadmore{padding-top: 20px;border-top: 1px solid #eee;width: 100%}
+        .weui-loadmore a {font-size: 12px;color: #586c94}
+    </style>
+</head>
+<body>
+<!--游记封面-->
+<div class="weui-flex">
+    <div class="weui-flex__item">
+        <img src="${ctx}/photo/TravelNote/${travelNoteAndUser.picUrl}" style="width: 100%">
+    </div>
+</div>
+<!--游记内容-->
+<div class="journey">
+    <div class="my-title">${travelNoteAndUser.title}</div>
+    <div class="my-info">
+        <a href="${ctx}/wechat/user/showUserIndex?userId=${travelNoteAndUser.userId}">
+            <img src="${travelNoteAndUser.user.headImgUrl}" class="head-img">
+        </a>
+        <p>
+            ${travelNoteAndUser.user.nickName}<br>
+            <span id="createTime"></span>
+            <span style="float: right">浏览 ${travelNoteAndUser.browseTimes}+</span>
+        </p>
+    </div>
+    <div class="my-content"></div>
+    <div class="weui-loadmore">
+        <a href="${ctx}/wechat/journey/showJourneyIndex">您已阅读完毕，去看看更多好玩游记吧~</a>
+    </div>
+</div>
+<!--底部导航栏-->
+<div class="weui-tabbar">
+    <a href="${ctx}/wechat/index/show?cityId=${sessionScope.currentCity.id}" class="weui-tabbar__item">
+        <div class="weui-tabbar__icon">
+            <img src="${ctx}/images/nav-home.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">回到首页</p>
+    </a>
+    <a class="weui-tabbar__item" id="like">
+        <div class="weui-tabbar__icon">
+            <img src="${ctx}/images/no-collected.png" alt="">
+        </div>
+        <p class="weui-tabbar__label">点赞（+<span id="likeNum">${travelNoteAndUser.appreciation}</span>）</p>
+    </a>
+</div>
+<script src="${ctx}/js/jquery-3.2.0.min.js"></script>
+<script src="${ctx}/js/jquery-weui.min.js"></script>
+<script src="${ctx}/js/fastclick.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+        var req,like = $("#like");
+        $(".my-content").append('${travelNoteAndUser.content}');
+        var t = fmtDate('${travelNoteAndUser.createTime}');
+        $("#createTime").text(t);
+
+        //测试用户是否点过赞
+        $.ajax({
+            type: 'post',
+            url: '${ctx}/wechat/journey/isAppreciated', // 请求处理页
+            dataType: 'json',
+            data: {id: '${travelNoteAndUser.id}', userId: '${sessionScope.userInfo.id}'},
+            success: function (data) {
+                if(data == 1){ //已赞
+                    like.unbind();
+                    like.find("img").attr("src","${ctx}/images/collected.png");
+                    like.find("p").html("已赞（+<span id='likeNum'>${travelNoteAndUser.appreciation}</span>）");
+                }
+            },
+            error: function (e) {
+                alert("点赞数据获取失败，请刷新页面重试");
+            }
+        });
+
+        //点赞
+        like.click(function () {
+            var self = $(this);
+            if(req == null){
+                req = $.ajax({
+                    type: 'post',
+                    url: '${ctx}/wechat/journey/journeyAppreciatied', // 请求处理页
+                    dataType: 'json',
+                    data: {id: '${travelNoteAndUser.id}', userId: '${sessionScope.userInfo.id}'},
+                    success: function (result) {
+                        if(result){ //result == 1
+                            //点赞成功之后
+                            var num = parseInt($("#likeNum").text())+1;
+                            self.find("img").attr("src","${ctx}/images/collected.png");
+                            self.find("p").html("已赞（+<span id='likeNum'>"+num+"</span>）");
+                            $.toast("点赞成功+1");
+                            self.unbind();
+                        }
+                        else{alert("点赞失败，请稍后重试");}
+                    },
+                    error: function (e) {
+                        alert("系统繁忙，请稍后重试");
+                    }
+                });
+            }
+        });
+    });
+    //游记创建时间格式化
+    function fmtDate(t) {
+        var date = new Date(t),
+            y = date.getFullYear(),
+            m = date.getMonth()<9?"0"+(date.getMonth()+1):date.getMonth()+1,
+            d = date.getDate()<10?"0"+date.getDate():date.getDate(),
+            h = date.getHours()<10?"0"+date.getHours():date.getHours(),
+            min = date.getMinutes()<10?"0"+date.getMinutes():date.getMinutes(),
+            s = date.getSeconds()<10?"0"+date.getSeconds():date.getSeconds();
+        return y+"-"+m+"-"+d+" "+h+":"+min+":"+s;
+    }
+</script>
+</body>
+</html>

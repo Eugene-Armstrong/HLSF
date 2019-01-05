@@ -1,0 +1,81 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fns" uri="http://java.sun.com/jsp/jstl/functionss" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>游记详情</title>
+    <link rel="stylesheet" href="${ctx}/css/pintuer.css">
+    <link rel="stylesheet" href="${ctx}/css/admin.css">
+    <style>
+        .panel-head{line-height: 42px}
+    </style>
+</head>
+<body>
+<div class="panel admin-panel">
+    <div class="panel-head">
+        <strong><span class="icon-check-square-o"></span> 游记详情</strong>
+        <a href="javascript:history.back()" style="margin-right: 5px"
+           class="button border-blue float-right" >返回</a>
+    </div>
+    <table class="table table-hover text-center table-bordered">
+        <tr>
+            <th>查看</th>
+            <th>用户名</th>
+            <th>上传时间</th>
+            <th>审核状态</th>
+            <th>审核者</th>
+            <th>审核时间</th>
+            <th>浏览量</th>
+            <th>备注</th>
+        </tr>
+        <c:forEach items="${travelNote}" var="note">
+            <tr>
+                <td><a href="#" class="dialogs journey" data-toggle="click" data-target="#journey"
+                       data-mask="1" data-width="50%">游记内容</a></td>
+                <td hidden="true" class="ac-details">${note.content}</td>
+                <td>${note.userRealName}</td>
+                <td><fmt:formatDate value="${note.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                <td>${fns:travelNoteState(note.state)}</td>
+                <td>${note.adminRealName}</td>
+                <td><fmt:formatDate value="${note.auditTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                <td>${note.browseTimes}</td>
+                <td>${note.remark}</td>
+            </tr>
+        </c:forEach>
+    </table>
+</div>
+<!--游记模态框-->
+<div id="journey">
+    <div class="dialog">
+        <div class="dialog-head">
+            <span class="close rotate-hover"></span><strong>查看游记</strong>
+        </div>
+        <div class="dialog-body my-test-journey" style="max-height:330px;overflow: scroll;overflow-x: hidden">
+        </div>
+        <div class="dialog-foot">
+            <button class="button dialog-close">
+                关闭</button>
+        </div>
+    </div>
+</div>
+<script src="${ctx}/js/jquery.js"></script>
+<script src="${ctx}/js/pintuer.js"></script>
+<script type="text/javascript">
+    var journeyContent="";
+    $(function () {
+        $(".journey").click(function () {
+            $(".my-test-journey").children().remove();
+            journeyContent = $(this).parent().siblings(".ac-details").html();
+            $(".my-test-journey").prepend(journeyContent);
+        })
+    })
+</script>
+</body>
+</html>

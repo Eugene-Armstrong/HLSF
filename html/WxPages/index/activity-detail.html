@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>活动详情</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="海浪山风休闲户外旅游在线平台">
+    <link rel="stylesheet" href="../css/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.min.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <style>
+        body,html{height: 100%}
+        /*领队信息*/
+        .leader-info {
+            font-size: 14px;
+            background: #fff;
+            padding: 10px 15px;
+            color: #333;
+            line-height: 20px
+        }
+        .leader-info p {
+            padding: 6px 0 10px 0
+        }
+        .score{
+            color: #999;
+            font-size: 12px;
+        }
+        .original-price{
+            float: right;
+            color: #999;
+            text-decoration: line-through;
+        }
+        .discount-price {float: right}
+        .discount-price b {color: #ff3962}
+        .my-title {
+            text-align: left;
+            font-size: 16px
+        }
+        .head-img {
+            margin-right: 5px;
+            float: left;
+            width: 48px!important;
+            height: 48px;
+            vertical-align: middle;
+            border-radius: 50%;
+        }
+        /*出发时间*/
+        .weui-panel__hd{
+            color: #333;
+            font-size: 14px;
+            padding: 10px 15px;
+            overflow: hidden
+        }
+        .weui-panel__hd b{color:#679aff}
+        .weui-panel__hd a{float: right;color: #333}
+        .swiper-container,.participant{
+            margin: 10px 15px;
+            font-size: 12px;
+            overflow: hidden;
+        }
+        .swiper-slide{width: auto!important;text-align: center;float: left}
+        .time-info{
+            padding: 10px;
+            background: #4e97d9;
+            border-radius: 8px;
+            float: left;
+            margin-right: 10px;
+            color: #fff;
+            opacity: .5;
+        }
+        .selected{opacity: 1}
+        .weui-tab {margin-top: 10px}
+        .weui-tab .weui-tab__bd{padding:50px 3vw 60px 3vw;background: #fff}
+        /*评价*/
+        #tab4::-webkit-scrollbar {display: none}
+        .overall-score{
+            width: 20vw;
+            height: 26vw;
+            margin: 1vw;
+            float: left;
+            text-align: center;
+            padding: 2vw;
+            color: #679aff;
+            border-radius: 5px;
+            border: 2px solid #679aff;
+        }
+        .overall-score hr{
+            border: 1px solid #679aff;
+            margin: 2vw 0 1vw 0;
+        }
+        .score-level{
+            margin: 1.5vw;
+            display: inline-block;
+            width: 63vw;
+        }
+        td{line-height: 5.5vw;color: #999;text-align: center}
+        .across-line{
+            border: 1px solid #ddd;
+            border-top: none;
+            margin: 15px 0;
+        }
+        .user{position: relative}
+        .user-info {
+            position: absolute;
+            width: 20%;
+            text-align: center;
+        }
+        .user-img{
+            border-radius: 50%;
+            width: 42px;
+        }
+        .user-name{font-size: 12px}
+        .comment-content {
+            position: relative;
+            margin-left: 20%;
+            padding:0 10px;
+            font-size: 14px;
+        }
+        .comment-detail{
+            line-height: 25px;
+            color: #999;
+            font-size: 12px;
+        }
+        .user-score{
+            height: 12px;
+            margin-top: 7px
+        }
+        .admin-reply{
+            margin-top: 5px;
+            background: #eee;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .admin-name{color: orangered}
+        .end-tip{color: #999;line-height: 30px;text-align: center}
+        /*底部*/
+        .my-bar{
+            width: 100%;
+            line-height: 50px;
+            position: fixed;
+            bottom: 0;
+            background: #fff;
+            z-index: 99;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+            color: #fff;
+        }
+        .my-bar div{float: left;text-align: center}
+        .my-bar div:after{border-right: 1px solid #ccc;}
+        .weui-popup__container{z-index: 999;}
+        .weui-popup__modal{background: #fff;text-align: center}
+        .consult-tip{width: 70%;margin: 0 auto;font-size: 14px}
+        .collect{width: 30%;background: #e74866}
+        .weui-btn{border-radius: 0;cursor: pointer;}
+        #tab4{font-size: 12px}
+        .weui-slider{padding: 0}
+        .weui-slider__inner,.weui-slider__track{height: 4px;border-radius: 5px}
+        .weui-slider__inner{width: 90%;margin: 0 auto}
+        .weui-slider__track{background: orangered}
+    </style>
+</head>
+<body>
+<!--活动图+名称-->
+<div class="weui-flex my-pic">
+    <div class="weui-flex__item">
+        <img src="../images/index-gncx.jpg">
+    </div>
+</div>
+<div class="my-title">【活动详情】这是活动例子这是活动例子</div>
+<!--领队信息-->
+<div class="leader-info">
+    <img src="../images/head-img.jpg" class="head-img">
+    <p>领队用户名<br><span class="score">评分：4.98 &nbsp;&nbsp; (168人评)</span></p>
+    难度：★★★
+    <span class="original-price">￥1800</span>
+    <br>
+    集合：09:00 北师大校名石集合
+    <span class="discount-price"><b>1280</b>元/人</span>
+</div>
+<!--出发时间-->
+<div class="weui-panel weui-panel_access">
+    <div class="weui-panel__hd">出发时间</div>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <a href="#">
+                    <div class="time-info selected">
+                        <nobr>10/01 - 10/04</nobr>
+                        <br>
+                        <nobr>已满员 | 20人</nobr>
+                    </div>
+                </a>
+            </div>
+            <div class="swiper-slide">
+                <a href="#">
+                    <div class="time-info">
+                        <nobr>10/01 - 10/04</nobr>
+                        <br>
+                        <nobr>已满员 | 20人</nobr>
+                    </div>
+                </a>
+            </div>
+            <div class="swiper-slide">
+                <a href="#">
+                    <div class="time-info">
+                        <nobr>10/01 - 10/04</nobr>
+                        <br>
+                        <nobr>已满员 | 20人</nobr>
+                    </div>
+                </a>
+            </div>
+            <div class="swiper-slide">
+                <a href="#">
+                    <div class="time-info">
+                        <nobr>10/01 - 10/04</nobr>
+                        <br>
+                        <nobr>已满员 | 20人</nobr>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--已参加的人数-->
+<div class="weui-panel weui-panel_access">
+    <div class="weui-panel__hd">
+        已参加的人（<b>10</b>人成行）
+        <a href="activity-participants.html">总共<b>8</b>/20人 ▶</a>
+    </div>
+</div>
+<!--活动说明-->
+<div class="weui-tab">
+    <!--导航-->
+    <div class="weui-navbar">
+        <a class="weui-navbar__item weui-bar__item--on" href="#tab1">活动详情</a>
+        <a class="weui-navbar__item" href="#tab2">活动行程</a>
+        <a class="weui-navbar__item" href="#tab3">费用说明</a>
+        <a class="weui-navbar__item" href="#tab4">评价</a>
+    </div>
+    <!--对应内容-->
+    <div class="weui-tab__bd">
+        <!--活动详情-->
+        <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+            <br><h5>活动详情（待添加）……</h5><br>
+            <img src="../images/mine-bg.jpg" alt="" style="width: 100%">
+        </div>
+        <!--活动行程-->
+        <div id="tab2" class="weui-tab__bd-item">
+            <br><h5>活动行程（待添加）……</h5>
+        </div>
+        <!--费用说明-->
+        <div id="tab3" class="weui-tab__bd-item">
+            <br><h5>费用说明（待添加）……</h5>
+        </div>
+        <!--评价-->
+        <div id="tab4" class="weui-tab__bd-item">
+            <div class="overall-score">
+                <h3>综合评分</h3><hr>
+                <h1 style="line-height: 10vw">5.00</h1>
+                <span style="line-height:5vw;color: #999;font-size: 12px">88人评分</span>
+            </div>
+            <div class="score-level">
+                <table>
+                    <tr>
+                        <td width="15%">极好</td>
+                        <td width="80%">
+                            <div class="weui-slider">
+                                <div class="weui-slider__inner">
+                                    <div style="width: 90%" class="weui-slider__track"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td width="15%">90%</td>
+                    </tr>
+                    <tr>
+                        <td width="15%">很好</td>
+                        <td width="80%">
+                            <div class="weui-slider">
+                                <div class="weui-slider__inner">
+                                    <div style="width: 10%" class="weui-slider__track"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td width="15%">10%</td>
+                    </tr>
+                    <tr>
+                        <td width="15%">一般</td>
+                        <td width="80%">
+                            <div class="weui-slider">
+                                <div class="weui-slider__inner">
+                                    <div style="width: 0" class="weui-slider__track"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td width="15%">0%</td>
+                    </tr>
+                    <tr>
+                        <td width="15%">不好</td>
+                        <td width="80%">
+                            <div class="weui-slider">
+                                <div class="weui-slider__inner">
+                                    <div style="width: 0" class="weui-slider__track"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td width="15%">0%</td>
+                    </tr>
+                    <tr>
+                        <td width="15%">很差</td>
+                        <td width="80%">
+                            <div class="weui-slider">
+                                <div class="weui-slider__inner">
+                                    <div style="width: 0" class="weui-slider__track"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td width="15%">0%</td>
+                    </tr>
+                </table>
+            </div><br><br>
+            <div style="color: #999;font-size: 14px">
+                ▶ 热门评论 <span class="my-status-2">Hot</span>
+            </div>
+            <hr class="across-line">
+            <div class="user">
+                <div class="user-info">
+                    <a href="../mine.html">
+                        <img src="../images/head-img.jpg" class="user-img" alt="">
+                    </a>
+                    <div class="user-name">用户名</div>
+                </div>
+                <div class="comment-content">这是评论内容这是评论内容这是评论内容<br>
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score"><br>
+                    <span class="comment-detail">09月02日出发 领队:小明</span>
+                </div>
+                <div class="admin-reply">
+                    <span class="admin-name">后台小姐姐 回复：</span>
+                    嘤嘤嘤讨厌啦人家要用小拳头捶你小胸口嘤嘤嘤捶你小胸口
+                    捶你小胸口捶你小胸口捶你小胸口捶你小胸口嘤嘤嘤
+                </div>
+            </div>
+            <hr class="across-line">
+            <div class="user">
+                <div class="user-info">
+                    <a href="../mine.html">
+                        <img src="../images/head-img.jpg" class="user-img" alt="">
+                    </a>
+                    <div class="user-name">用户名</div>
+                </div>
+                <div class="comment-content">这是评论内容这是评论内容这是评论内容<br>
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score"><br>
+                    <span class="comment-detail">09月02日出发 领队:小明</span>
+                </div>
+            </div>
+            <hr class="across-line">
+            <div class="user">
+                <div class="user-info">
+                    <a href="../mine.html">
+                        <img src="../images/head-img.jpg" class="user-img" alt="">
+                    </a>
+                    <div class="user-name">用户名</div>
+                </div>
+                <div class="comment-content">这是评论内容这是评论内容这是评论内容<br>
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score"><br>
+                    <span class="comment-detail">09月02日出发 领队:小明</span>
+                </div>
+            </div>
+            <hr class="across-line">
+            <div class="user">
+                <div class="user-info">
+                    <a href="../mine.html">
+                        <img src="../images/head-img.jpg" class="user-img" alt="">
+                    </a>
+                    <div class="user-name">用户名</div>
+                </div>
+                <div class="comment-content">这是评论内容这是评论内容这是评论内容<br>
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score">
+                    <img src="../images/star-on.png" class="user-score"><br>
+                    <span class="comment-detail">09月02日出发 领队:小明</span>
+                </div>
+            </div>
+            <hr class="across-line">
+            <div class="end-tip">没有更多评论了</div>
+        </div>
+    </div>
+</div>
+<!--footer-->
+<div class="my-bar">
+    <a href="../index.html">
+        <div style="width:20%;color: #fff;background: #333">☛ 首页</div>
+    </a>
+    <div class="open-popup" data-target="#qr" style="width: 20%;background:#ffaf4d ">✔ 咨询</div>
+    <div class="collect">❤ 收藏</div>
+    <a href="activity-enroll.html">
+        <div style="width: 30%;background: #6089e7;color: #fff;">立即报名</div>
+    </a>
+</div>
+<div id="qr" class="weui-popup__container" style="display: none;">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <a class="weui-btn weui-btn_primary close-popup">返回</a>
+        <br><br>欢迎长按二维码<br>加入本活动群<br><br>
+        <img src="../images/test.png"
+             style="width: 60%;min-width: 150px;min-height: 150px" alt="（待上传）"><br><br>
+        <div class="consult-tip">
+            温馨提示：这是公开接受咨询的活动群，无法逐一审核群内用户，小伙伴们请谨慎接受陌生人的好友请求。
+        </div>
+    </div>
+</div>
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<script src="../js/swiper.min.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+        $(".swiper-container").swiper({
+            slidesPerView: 2
+        });
+        var $collect = $(".collect"),isCollected = "false";
+        if(isCollected === "true"){ //原状态为-已收藏，则显示“取消收藏”
+            $collect.text("取消收藏");
+        }else{ //原状态为-未收藏，则显示“收藏”
+            $collect.text("★ 收藏");
+        }
+        $(document).on("click",".collect",function () {
+            if(isCollected === "true"){
+                isCollected = "false";
+                $.toptip("已取消收藏本活动");
+                $collect.text("★ 收藏");
+            }else{
+                isCollected = "true";
+                $.toptip("收藏成功","success");
+                $collect.text("取消收藏");
+            }
+        }).on("click",".weui-navbar__item",function () {
+            var index = $(this).index()+1;
+            window.location.hash = "#tab"+index;
+        });
+        $(".time-info").click(function () {
+            $(".time-info").removeClass("selected");
+            $(this).addClass("selected");
+        });
+    })
+</script>
+</body>
+</html>

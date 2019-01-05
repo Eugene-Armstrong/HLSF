@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>游记审核</title>
+    <link rel="stylesheet" href="../css/pintuer.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/pintuer.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //点击删除前
+            $("a[href='#yes'], a[href='#no'], table th:first, .ckb").hide();
+            //点击删除事件
+            $("a[href='#del']").css("color", "red")
+                .click(function () {
+                    $(this).hide();
+                    $("a[href='#yes'], a[href='#no'], table th:first, .ckb, .all").show();
+                });
+            //点击确认删除
+            $("a[href='#yes']").click(function () {
+                var intL = $("input:checked").length; // 获取所有复选框选中项
+                if (intL != 0) { // 如果有选中项
+                    alert("您确定要删除所选项吗？");
+                    $("input[type=checkbox]").each(function (index) { // 遍历全部复选框的行
+                        if (this.checked) { // 如果选中
+                            $(this).parent("td").parent("tr").remove();// 获取选中的值，并删除对应内容
+                        }
+                    })
+                } else {
+                    alert("请先选中要删除的项！");
+                }
+            });
+            //点击取消删除
+            $("a[href='#no']").click(function () {
+                $("a[href='#yes'], a[href='#no'], table th:first, .ckb, .all").hide();
+                $("a[href='#del']").show();
+            });
+
+            //待审核全选复选框
+            $("#todo input[value='all']").click(function () {
+                if (this.checked) { // 如果自己被选中
+                    $("#todo input[type=checkbox]").prop("checked", true);
+                } else { // 如果自己没被选中
+                    $("#todo input[type=checkbox]").prop("checked", false);
+                }
+            });
+            //已审核全选复选框
+            $("#done input[value='all']").click(function () {
+                if (this.checked) { // 如果自己被选中
+                    $("#done input[type=checkbox]").prop("checked", true);
+                } else { // 如果自己没被选中
+                    $("#done input[type=checkbox]").prop("checked", false);
+                }
+            });
+
+            //选择活动显示信息
+            $("select").change(function () {
+                if($("option[value='todo']").is(":selected")){
+                    $("#todo").show();
+                    $("#done").hide();
+                }else{
+                    $("#todo").hide();
+                    $("#done").show();
+                }
+            });
+            $(".delete").click(function () {
+                var t = $(this);
+               $(".dialog-foot .bg-main").click(function () {
+                   t.parent().parent().remove();
+               })
+            })
+        });
+    </script>
+    <style>
+        select {
+            display: inline !important;
+            margin-left: 10px;
+            width: 15% !important;
+        }
+        /*已审核全选框*/
+        .all{
+            display: none;
+        }
+        #done{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="panel admin-panel">
+    <div class="panel-head">
+        <strong><span class="icon-check-square-o"></span> 游记审核</strong>
+        <select class="input" name="auditType">
+            <option value="todo">待审核</option>
+            <option value="done">已审核</option>
+        </select>
+        <span style="float: right;line-height: 42px">
+            <a class="icon-trash-o" href="#del" style="margin-right: 20px"> 删除</a>
+            <a href="#yes"> 确认删除</a>&nbsp;
+            <a href="#no" style="margin-right: 20px"> 取消删除</a>
+        </span>
+    </div>
+
+    <!--待审核-->
+    <table id="todo" class="table table-hover text-center">
+        <tr>
+            <th>
+                全选 <input type="checkbox" value="all">
+            </th>
+            <th>用户名</th>
+            <th>查看</th>
+            <th>上传时间</th>
+            <th>浏览量</th>
+            <th>审核</th>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.01</td>
+            <td>2333</td>
+            <td>
+                <a href="#">通过并发布</a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reject" data-mask="1" data-width="50%">否决</a> /
+                <a href="auditMng-journeyDetail.html">更多详情</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.01</td>
+            <td>2333</td>
+            <td>
+                <a href="#">通过并发布</a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reject" data-mask="1" data-width="50%">否决</a> /
+                <a href="auditMng-journeyDetail.html">更多详情</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.01</td>
+            <td>2333</td>
+            <td>
+                <a href="#">通过并发布</a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reject" data-mask="1" data-width="50%">否决</a> /
+                <a href="auditMng-journeyDetail.html">更多详情</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.01</td>
+            <td>2333</td>
+            <td>
+                <a href="#">通过并发布</a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reject" data-mask="1" data-width="50%">否决</a> /
+                <a href="auditMng-journeyDetail.html">更多详情</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.01</td>
+            <td>2333</td>
+            <td>
+                <a href="#">通过并发布</a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reject" data-mask="1" data-width="50%">否决</a> /
+                <a href="auditMng-journeyDetail.html">更多详情</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="8">
+                <div class="pagelist"><a href="">上一页</a><span class="current">1</span><a href="">2</a><a
+                        href="">3</a><a href="">下一页</a><a href="">尾页</a></div>
+            </td>
+        </tr>
+    </table>
+    <!--已审核-->
+    <table id="done" class="table table-hover text-center">
+        <tr >
+            <th class="all">
+                全选 <input type="checkbox" value="all">
+            </th>
+            <th>用户名</th>
+            <th>查看</th>
+            <th>发布时间</th>
+            <th>浏览量</th>
+            <th>管理</th>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.07</td>
+            <td>2333</td>
+            <td>
+                <a href="#" class="dialogs delete" data-toggle="click" data-target="#delete" data-mask="1" data-width="50%">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.07</td>
+            <td>2333</td>
+            <td>
+                <a href="#" class="dialogs delete" data-toggle="click" data-target="#delete" data-mask="1" data-width="50%">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.07</td>
+            <td>2333</td>
+            <td>
+                <a href="#" class="dialogs delete" data-toggle="click" data-target="#delete" data-mask="1" data-width="50%">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.07</td>
+            <td>2333</td>
+            <td>
+                <a href="#" class="dialogs delete" data-toggle="click" data-target="#delete" data-mask="1" data-width="50%">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td>
+                <a href="#" class="dialogs" data-toggle="click" data-target="#journey" data-mask="1" data-width="50%">游记内容</a>
+                / <a href="auditMng-journeyComment.html">游记评论</a>
+            </td>
+            <td>2017.08.07</td>
+            <td>2333</td>
+            <td>
+                <a href="#" class="dialogs delete" data-toggle="click" data-target="#delete" data-mask="1" data-width="50%">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="8">
+                <div class="pagelist"><a href="">上一页</a><span class="current">1</span><a href="">2</a><a
+                        href="">3</a><a href="">下一页</a><a href="">尾页</a></div>
+            </td>
+        </tr>
+    </table>
+
+    <!--否决模态框-->
+    <div id="reject">
+        <div class="dialog">
+            <div class="dialog-head">
+                <span class="close rotate-hover"></span><strong>回复否决理由</strong>
+            </div>
+            <div class="dialog-body">
+                <textarea rows="5" style="width: 100%" class="input" placeholder="请输入否决理由"></textarea>
+            </div>
+            <div class="dialog-foot">
+                <button class="button dialog-close">
+                    取消</button>
+                <button class="button bg-green">
+                    发送</button>
+            </div>
+        </div>
+    </div>
+    <!--游记模态框-->
+    <div id="journey">
+        <div class="dialog">
+            <div class="dialog-head">
+                <span class="close rotate-hover"></span><strong>查看游记</strong>
+            </div>
+            <div class="dialog-body" style="max-height:330px;overflow: scroll;overflow-x: hidden">
+                <h2 class="panel-head text-center">这是游记标题</h2>
+                <p><img class="img-responsive" src="../images/0.jpg"></p>
+                <p>
+                    今天又是元气满满的一天呢今天又是元气满满的一天呢今天又是元气满满的一天呢
+                    今天又是元气满满的一天呢今天又是元气满满的一天呢今天又是元气满满的一天呢
+                    今天又是元气满满的一天呢今天又是元气满满的一天呢今天又是元气满满的一天呢
+                </p>
+                <p>这些都是游记内容游记内容这些都是游记内容游记内容这些都是游记内容游记内容</p>
+                <p>
+                    今天又是元气满满的一天呢今天又是元气满满的一天呢今天又是元气满满的一天呢
+                    今天又是元气满满的一天呢今天又是元气满满的一天呢今天又是元气满满的一天呢
+                    今天又是元气满满的一天呢今天又是元气满满的一天呢今天又是元气满满的一天呢
+                </p>
+                <p><img class="img-responsive" src="../images/1.jpg"></p>
+                <p>这些都是游记内容游记内容这些都是游记内容游记内容这些都是游记内容游记内容</p>
+            </div>
+            <div class="dialog-foot">
+                <button class="button dialog-close">
+                    关闭</button>
+            </div>
+        </div>
+    </div>
+    <!--确认删除模态框-->
+    <div id="delete">
+        <div class="dialog">
+            <div class="dialog-head">
+                <span class="close rotate-hover"></span><strong>删除游记</strong>
+            </div>
+            <div class="dialog-body">
+                确定删除本篇游记吗？
+            </div>
+            <div class="dialog-foot">
+                <button class="button dialog-close">
+                    取消</button>
+                <button class="button bg-main dialog-close" id="sure">
+                    确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

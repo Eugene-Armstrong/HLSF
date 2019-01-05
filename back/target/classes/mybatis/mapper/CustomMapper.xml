@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.bnuz.seawas.dao.CustomMapper" >
+
+  <resultMap id="BaseResultMap" type="cn.edu.bnuz.seawas.entity.Custom" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="userId" property="user.id" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="startTime" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="departCity" property="departCity.id" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="averageAge" property="averageAge" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="manaName" property="manaName" jdbcType="VARCHAR" />
+    <result column="manaTel" property="manaTel" jdbcType="VARCHAR" />
+    <result column="aim" property="aim" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="adminId" property="admin.id" jdbcType="VARCHAR" />
+    <result column="delFlag" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    a.id,
+    a.userId AS "user.id",
+    a.type,
+    a.startTime,
+    a.departCity AS "departCity.id",
+    a.number,
+    a.averageAge,
+    a.price,
+    a.name,
+    a.manaName,
+    a.manaTel,
+    a.aim,
+    a.remark,
+    a.state,
+    a.createTime,
+    a.adminId AS "admin.id",
+    a.delFlag
+  </sql>
+
+  <sql id="userCityJoinColumns">
+    u.realName AS "user.realName",
+    u.nickName AS "user.nickName",
+    c.name AS "departCity.name"
+  </sql>
+
+  <sql id="userCityJoins">
+    LEFT JOIN t_user u ON a.userId = u.id
+    LEFT JOIN t_city c ON a.departCity = c.id
+  </sql>
+
+  <select id="get" resultType="cn.edu.bnuz.seawas.entity.Custom">
+    select 
+      <include refid="Base_Column_List" />,
+      <include refid="userCityJoinColumns"/>
+    from t_custom a
+      <include refid="userCityJoins"/>
+    where a.id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findList" resultType="cn.edu.bnuz.seawas.entity.Custom">
+    SELECT
+      <include refid="Base_Column_List"/>,
+      <include refid="userCityJoinColumns"/>
+    FROM t_custom a
+      <include refid="userCityJoins"/>
+    <where>
+      <if test="delFlag != null and delFlag != ''">
+        delFlag = #{delFlag}
+      </if>
+    </where>
+  </select>
+
+  <update id="delete">
+    UPDATE t_custom
+    SET delFlag = '1'
+    WHERE id = #{id}
+  </update>
+
+  <insert id="insert">
+    insert into t_custom (
+      id,
+      userId,
+      type,
+      startTime,
+      departCity,
+      number,
+      averageAge,
+      price,
+      name,
+      manaName,
+      manaTel,
+      aim,
+      remark,
+      state,
+      createTime,
+      adminId,
+      delFlag)
+    values (
+      #{id,jdbcType=VARCHAR},
+      #{user.id,jdbcType=VARCHAR},
+      #{type,jdbcType=VARCHAR},
+      #{startTime,jdbcType=TIMESTAMP},
+      #{departCity.id,jdbcType=VARCHAR},
+      #{number,jdbcType=INTEGER},
+      #{averageAge,jdbcType=INTEGER},
+      #{price,jdbcType=DOUBLE},
+      #{name,jdbcType=VARCHAR},
+      #{manaName,jdbcType=VARCHAR},
+      #{manaTel,jdbcType=VARCHAR},
+      #{aim,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR},
+      #{state,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{admin.id,jdbcType=VARCHAR},
+      #{delFlag,jdbcType=CHAR})
+  </insert>
+
+  <insert id="insertSelective">
+    insert into t_custom
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="user!=null">
+      <if test="user.id != null" >
+        userId,
+      </if>
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="startTime != null" >
+        startTime,
+      </if>
+      <if test="departCity!=null">
+      <if test="departCity.id != null" >
+        departCity,
+      </if>
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="averageAge != null" >
+        averageAge,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="manaName != null" >
+        manaName,
+      </if>
+      <if test="manaTel != null" >
+        manaTel,
+      </if>
+      <if test="aim != null" >
+        aim,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="admin!=null">
+      <if test="admin.id != null" >
+        adminId,
+      </if>
+      </if>
+      <if test="delFlag != null" >
+        delFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="user!=null">
+      <if test="user.id != null" >
+        #{user.id,jdbcType=VARCHAR},
+      </if>
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="departCity!=null">
+      <if test="departCity.id != null" >
+        #{departCity.id,jdbcType=VARCHAR},
+      </if>
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="averageAge != null" >
+        #{averageAge,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="manaName != null" >
+        #{manaName,jdbcType=VARCHAR},
+      </if>
+      <if test="manaTel != null" >
+        #{manaTel,jdbcType=VARCHAR},
+      </if>
+      <if test="aim != null" >
+        #{aim,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="admin!=null">
+      <if test="admin.id != null" >
+        #{admin.id,jdbcType=VARCHAR},
+      </if>
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective">
+    update t_custom
+    <set >
+      <if test="user.id != null" >
+        userId = #{user.id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        startTime = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="departCity.id != null" >
+        departCity = #{departCity.id,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="averageAge != null" >
+        averageAge = #{averageAge,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="manaName != null" >
+        manaName = #{manaName,jdbcType=VARCHAR},
+      </if>
+      <if test="manaTel != null" >
+        manaTel = #{manaTel,jdbcType=VARCHAR},
+      </if>
+      <if test="aim != null" >
+        aim = #{aim,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="admin.id != null" >
+        adminId = #{admin.id,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        delFlag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="update">
+    update t_custom
+    set userId = #{user.id,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      startTime = #{startTime,jdbcType=TIMESTAMP},
+      departCity = #{departCity.id,jdbcType=VARCHAR},
+      number = #{number,jdbcType=INTEGER},
+      averageAge = #{averageAge,jdbcType=INTEGER},
+      price = #{price,jdbcType=DOUBLE},
+      name = #{name,jdbcType=VARCHAR},
+      manaName = #{manaName,jdbcType=VARCHAR},
+      manaTel = #{manaTel,jdbcType=VARCHAR},
+      aim = #{aim,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      adminId = #{admin.id,jdbcType=VARCHAR},
+      delFlag = #{delFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectCustomSelective" resultType="cn.edu.bnuz.seawas.entity.Custom">
+    select
+    <include refid="Base_Column_List" />,
+    <include refid="userCityJoinColumns"/>
+    from t_custom a
+    <include refid="userCityJoins"/>
+    where
+
+    <if test="type != null" >
+      a.type = #{type,jdbcType=VARCHAR}AND
+    </if>
+    <if test="startTime != null" >
+      a.startTime = #{startTime,jdbcType=TIMESTAMP}AND
+    </if>
+    <if test="departCity != null" >
+      a.departCity = #{departCity,jdbcType=VARCHAR}AND
+    </if>
+    <if test="number != null" >
+      a.number = #{number,jdbcType=INTEGER}AND
+    </if>
+    <if test="averageAge != null" >
+      a.averageAge = #{averageAge,jdbcType=INTEGER}AND
+    </if>
+    <if test="price != null" >
+      a.price = #{price,jdbcType=DOUBLE}AND
+    </if>
+    <if test="name != null" >
+      a.name = #{name,jdbcType=VARCHAR}AND
+    </if>
+    <if test="manaName != null" >
+      a.manaName = #{manaName,jdbcType=VARCHAR}AND
+    </if>
+    <if test="manaTel != null" >
+      a.manaTel = #{manaTel,jdbcType=VARCHAR}AND
+    </if>
+    <if test="aim != null" >
+      a.aim = #{aim,jdbcType=VARCHAR}AND
+    </if>
+    <if test="remark != null" >
+      a.remark = #{remark,jdbcType=VARCHAR}AND
+    </if>
+    <if test="state != null" >
+      a.state = #{state,jdbcType=VARCHAR}AND
+    </if>
+    <if test="createTime != null" >
+      a.createTime = #{createTime,jdbcType=TIMESTAMP}AND
+    </if>
+    <if test="admin != null" >
+      a.adminId = #{admin,jdbcType=VARCHAR}AND
+    </if>
+    a.delFlag = '0'
+  </select>
+
+  <!--批量删除-->
+  <update id="deleteCustoms">
+    UPDATE seawas.t_custom
+    SET delFlag = '1'
+    WHERE  id IN
+    <foreach collection="customs" item="customs" open="(" separator="," close=")">
+      #{customs.id,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+</mapper>

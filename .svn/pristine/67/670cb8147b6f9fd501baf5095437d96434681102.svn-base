@@ -1,0 +1,104 @@
+package cn.edu.bnuz.seawas.service.weChat.mine;
+
+import cn.edu.bnuz.seawas.dao.AppreciationMapper;
+import cn.edu.bnuz.seawas.dao.TravelNoteMapper;
+import cn.edu.bnuz.seawas.entity.Appreciation;
+import cn.edu.bnuz.seawas.entity.TravelNote;
+import cn.edu.bnuz.seawas.entity.User;
+import cn.edu.bnuz.seawas.utils.DateUtils;
+import cn.edu.bnuz.seawas.utils.UUIDUtil;
+import cn.edu.bnuz.seawas.vo.wechat.TravelNoteAndUser;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by Zrj on 2017/11/23.
+ */
+@Service
+public class WxTravelNoteService {
+    @Autowired
+    private TravelNoteMapper travelNoteMapper;
+
+    @Autowired
+    private AppreciationMapper appreciationMapper;
+
+    /**
+     * 微信端根据id查询游记
+     * 更改游记
+     */
+    public TravelNote selectByPrimaryKey(String id){
+        return travelNoteMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 微信端根据id查询游记
+     * 查看游记
+     */
+    public TravelNoteAndUser selectNoteAndUser(String id){
+        TravelNote travelNote = new TravelNote();
+        travelNote.setId(id);
+        travelNote.setState("1");
+        travelNoteMapper.updateBrowseTimes(id);
+        return travelNoteMapper.WxgetNote(travelNote);
+    }
+
+    /**
+     * 社区模块中的游记显示
+     */
+    public PageInfo<TravelNoteAndUser> getNoteAtSociety(Integer pageNum, Integer pageSize){
+        //设置查询条件
+        TravelNote travelNote = new TravelNote();
+        travelNote.setState("1");
+
+        pageNum = pageNum == null ? 1 : pageNum;
+        pageSize = pageSize == null ? 1 : pageSize;
+        PageHelper.startPage(pageNum, pageSize);
+        List<TravelNoteAndUser>  travelNoteAndUserList = travelNoteMapper.WxgetAllNoteSelective(travelNote);
+
+        return new PageInfo<TravelNoteAndUser>(travelNoteAndUserList);
+    }
+
+    /**
+     * 个人页面的草稿游记
+     */
+    public List<TravelNoteAndUser> getDraftAtMine(User user){
+        TravelNote travelNote = new TravelNote();
+        travelNote.setState("0");
+        travelNote.setUserId(user.getId());
+        return travelNoteMapper.WxgetAllNoteSelective(travelNote);
+    }
+
+    /**
+     * 个人页面的已审核游记
+     */
+    public List<TravelNoteAndUser> getNoteAtMine(User user){
+        TravelNote travelNote = new TravelNote();
+        travelNote.setState("1");
+        travelNote.setUserId(user.getId());
+        return travelNoteMapper.WxgetAllNoteSelective(travelNote);
+    }
+
+    /**
+     * 用户点赞
+     */
+    public int insertAppreciation(String id, String userId){
+        Appreciation appreciation = new Appreciation();
+        appreciation.setId(UUIDUtil.createUUID());
+        appreciation.setTravelnoteId(id);
+        appreciation.setUserId(userId);
+        try {
+            appreciation.setAppreciatdTime(DateUtils.getCurrDate());
+            appreciationMapper.insertSelective(appreciation);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return 1;
+    }
+}

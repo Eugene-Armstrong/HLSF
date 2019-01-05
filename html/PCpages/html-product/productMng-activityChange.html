@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>活动修改</title>
+    <link rel="stylesheet" href="../css/pintuer.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/pintuer.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../ueditor/ueditor.all.min.js"></script>
+    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型
+        比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+    <script type="text/javascript" charset="utf-8" src="../ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script>
+        $(function () {
+            var cur_date; // 当前日期
+            var start_date; //出发日期
+            var stop_date; //截止报名日期
+            var end_date; //结束日期
+
+            //日期先后验证
+            $(".stop-date").on("input", function () {
+                cur_date = new Date();//当前日期
+                stop_date = new Date($(this).val()); //截止报名日期
+                if(stop_date.getTime() < cur_date.getTime()){
+                    alert("截止报名日期必须大于当前日期，请重新选择");
+                    $(this).val("");
+                }
+            });
+            $(".start-date").on("input", function () {
+                if ($(".stop-date").val() == "") {
+                    alert("请先选择截止报名时间");
+                    $(this).val("");
+                } else {
+                    start_date = new Date($(this).val()); //出发日期
+                    if(start_date.getTime() < stop_date.getTime()){
+                        alert("出发日期不能小于截止报名日期，请重新选择");
+                        $(this).val("");
+                    }
+                }
+            });
+            $(".end-date").on("input", function () {
+                if ($(".start-date").val() == "") {
+                    alert("请先选择出发时间");
+                    $(this).val("");
+                } else {
+                    end_date = new Date($(this).val()); //结束日期
+                    if(end_date.getTime() <= start_date.getTime()){
+                        alert("结束日期必须大于出发日期，请重新选择");
+                        $(this).val("");
+                    }
+                }
+            });
+
+            var selectLeaders = $("select[name=leaders]");
+            //添加活动领队
+            selectLeaders.change(function () {
+                if($(this).get(0).selectedIndex != 0){
+                    var leadersTxt = $(this).find("option:selected").text();//选中领队文本
+                    var leadersVal = $(this).find("option:selected").val();//选中领队value
+                    var check = true;
+                    $(".leaders .my-tag").each(function () {
+                        if(leadersVal == $(this).attr("id")){
+                            alert("不能重复添加已存在的领队");
+                            check = false;
+                            return false;
+                        }
+                    });
+                    if(check){
+                        //追加指定内容
+                        $(".leaders .my-tags").append("<span class='my-tag close' title='删除' id='"
+                            + leadersVal + "'>" + leadersTxt + "</span>");
+                    }
+                    $("body").on("click",".leaders .my-tag",function () {
+                        $(this).remove();
+                    });
+                }
+            });
+            $("body").on("click",".leaders .my-tag",function () { //下拉选中值没有变动时的执行删除
+                $(this).remove();
+            });
+
+            var selectRules = $("select[name=rules]");
+            //添加优惠规则
+            selectRules.change(function () {
+                if($(this).get(0).selectedIndex != 0){
+                    var rulesTxt = $(this).find("option:selected").text();//选中规则文本
+                    var rulesVal = $(this).find("option:selected").val();//选中规则value
+                    var check = true;
+                    $(".rules .my-tag").each(function () {
+                        if(rulesVal == $(this).attr("id")){
+                            alert("不能重复添加已存在的优惠规则");
+                            check = false;
+                            return false;
+                        }
+                    });
+                    if(check){
+                        //追加指定内容
+                        $(".rules .my-tags").append("<span class='my-tag close' title='删除' id='"
+                            + rulesVal + "'>" + rulesTxt + "</span>");
+                    }
+                    $("body").on("click",".rules .my-tag",function () {
+                        $(this).remove();
+                    });
+                }
+            });
+            $("body").on("click",".rules .my-tag",function () { //下拉选中值没有变动时的执行删除
+                $(this).remove();
+            });
+
+            $(".confirm").on("click",function () {
+                var check = true;
+                $(".must").each(function () {
+                    if($(this).val()==""){
+                        $(this).focus();
+                        var s = $(this).parent().prev().text();
+                        alert("请把 "+s.substring(0,s.length-1)+" 填写完整");
+                        check = false;
+                        return false;
+                    }
+                });
+                var checkAgain = true;
+                if(($(".leaders .my-tags").html() == "")&&check){
+                    alert("请选择至少一个领队");
+                    selectLeaders.focus();
+                    checkAgain = false;
+                }
+                if(check&&checkAgain){
+                    var _id = $(".product-id").val();//产品ID
+                    var _price = $(".price").val(); //活动价格
+                    var _num = $(".num").val();//成行人数
+                    var _discount = $(".discount").val();//优惠价格
+                    var _leaders = "";
+                    //获取所选领队value
+                    $(".leaders .my-tag").each(function () { // 规则遍历
+                        _leaders += $(this).attr("id") + ",";
+                    });
+                    var _rules = "";
+                    //获取所选优惠规则value
+                    $(".rules .my-tag").each(function () { // 规则遍历
+                        _rules += $(this).attr("id") + ",";
+                    });
+                    var _location = $(".location").val();//集合地点
+                    var _startTime = $(".start-date").val() + " " + $(".start-clock").val();//出发时间
+                    var _stopTime = $(".stop-date").val() + " " + $(".stop-clock").val();//截止报名时间
+                    var _endTime = $(".end-date").val() + " " + $(".end-clock").val();//结束时间
+
+                    var _introduce = UE.getEditor('introduce').getContent();//活动介绍
+                    var _process = UE.getEditor('process').getContent();//活动行程
+                    var _cost = UE.getEditor('cost').getContent();//费用说明
+
+                    $.ajax({
+                        type: "post",
+                        async: false,
+                        url: "", // 请求处理页
+                        dataType: "json",
+                        data: {
+                            id: _id,
+                            price: _price,
+                            num: _num,
+                            leaders:_leaders,
+                            discount: _discount,
+                            rules: _rules,
+                            location: _location,
+                            startTime: _startTime,
+                            stopTime: _stopTime,
+                            endTime: _endTime,
+                            html_introduce: _introduce,
+                            html_process: _process,
+                            html_cost: _cost
+                        },
+                        success: function (result) {
+                            alert("产品ID：" + _id +
+                                "\n活动价格：" + _price +
+                                "\n成行人数：" + _num +
+                                "\n活动领队：" + _leaders +
+                                "\n优惠价格：" + _discount +
+                                "\n优惠规则：" + _rules +
+                                "\n截止报名时间：" + _stopTime +
+                                "\n集合地点：" + _location +
+                                "\n出发时间：" + _startTime +
+                                "\n结束时间：" + _endTime +
+                                "\n活动介绍：" + _introduce +
+                                "\n活动行程：" + _process +
+                                "\n费用说明：" + _cost);
+//                            if(result == 1)
+//                                alert("添加活动成功！");
+//                            else
+//                                alert("添加活动失败！请稍后重试！");
+//                            window.location.href = "${ctx}/activity/showProductActivity?productId=${productId}";
+                        }
+//                        ,error: function() {
+//                            alert("系统繁忙，请稍后再试！");
+//                            window.location.href = "${ctx}/activity/showProductActivity?productId=${productId}";
+//                        }
+                    });
+                }
+            })
+        })
+    </script>
+    <style>
+        td input {
+            float: left;
+        }
+
+        td {
+            border-top: 0 !important;
+        }
+
+        textarea {
+            width: 100% !important;
+        }
+
+        input[type=date], input[type=time] {
+            width: 48%;
+            margin-right: 2px;
+        }
+
+        .my-tags {
+            padding-top: 0 !important;
+        }
+
+        .my-tag {
+            background: #3288de;
+            color: #fff;
+            padding: 2px 5px;
+            margin: 2px;
+            font-size: 14px;
+            line-height: inherit;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+<div class="panel admin-panel">
+    <div class="panel-head">
+        <strong><span class="icon-pencil-square-o"></span> 活动修改</strong>
+        <a class="float-right" href="javascript:history.back()">
+            <span class="icon-reply"></span> 返回
+        </a>
+    </div>
+    <form action="" id="addActivity">
+        <table class="table">
+            <tr style="display: none">
+                <td><input type="text" class="product-id" value=""></td>
+            </tr>
+            <tr>
+                <td class="text-right" width="120px">活动价格：</td>
+                <td width="30%">
+                    <input type="number" class="input price" placeholder="请输入活动价格(必填)" required>
+                </td>
+                <td width="5%"></td>
+                <td rowspan="12" width="50%">
+                    <div class="tab">
+                        <div class="tab-head">
+                            <ul class="tab-nav">
+                                <li class="active"><a href="#tab-1">活动介绍</a></li>
+                                <li><a href="#tab-2">活动行程</a></li>
+                                <li><a href="#tab-3">费用说明</a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-body">
+                            <div class="tab-panel active" id="tab-1">
+                                <script id="introduce" type="text/plain" style="width:400px;height:600px;">请编辑活动介绍</script>
+                            </div>
+                            <div class="tab-panel" id="tab-2">
+                                <script id="process" type="text/plain" style="width:400px;height:600px;">请编辑活动行程</script>
+                            </div>
+                            <div class="tab-panel" id="tab-3">
+                                <script id="cost" type="text/plain" style="width:400px;height:600px;">请编辑费用说明</script>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right">成行人数：</td>
+                <td width="30%"><input type="number" class="input num" placeholder="请输入成行人数(必填)" required></td>
+            </tr>
+            <tr>
+                <td class="text-right">活动领队：</td>
+                <td>
+                    <select class="input" name="leaders" required>
+                        <option value="">请选择领队(必填-多选)</option>
+                        <option value="leader1_ID">111111-领队1(带队1次)</option>
+                        <option value="leader2_ID">222222-领队2(带队2次)</option>
+                        <option value="leader3_ID">333333-领队3(带队3次)</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="leaders">
+                <td class="text-right">已添加领队：</td>
+                <td class="my-tags"></td>
+            </tr>
+            <tr>
+                <td class="text-right" width="200px">优惠价格：</td>
+                <td>
+                    <input type="number" class="input discount" placeholder="请输入优惠价格">
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right">优惠规则：</td>
+                <td>
+                    <select class="input" name="rules">
+                        <option value="">请选择优惠规则(多选)</option>
+                        <option value="1">优惠规则1</option>
+                        <option value="2">优惠规则2</option>
+                        <option value="3">优惠规则3</option>
+                        <option value="4">优惠规则4</option>
+                        <option value="5">优惠规则5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="rules">
+                <td class="text-right">已添加规则：</td>
+                <td class="my-tags"></td>
+            </tr>
+            <tr>
+                <td class="text-right">截止报名时间：</td>
+                <td>
+                    <input type="date" class="input stop-date" required>
+                    <input type="time" class="input stop-clock" value="00:00" readonly required>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right">集合地点：</td>
+                <td>
+                    <textarea rows="5" class="input location" placeholder="请输入集合地点(必填,不超过200字)"
+                              maxlength="200" required></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right">出发时间：</td>
+                <td>
+                    <input type="date" class="input start-date" required>
+                    <input type="time" class="input start-clock" value="08:00" required>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right">结束时间：</td>
+                <td>
+                    <input type="date" class="input end-date" required>
+                    <input type="time" class="input end-clock" value="00:00" readonly required>
+                </td>
+            </tr>
+            <tr>
+                <td><br><br></td>
+                <td>
+                    <button class="button border-blue">确定添加</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:history.back()" class="button border-red">取消</a>
+                </td>
+                <td colspan="3"></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script>
+    //实例化编辑器
+    //建议使用工厂方法getEditor创建和引用编辑器实例
+    // 如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+    var ue_introduce = UE.getEditor('introduce');
+    var ue_process = UE.getEditor('process');
+    var ue_cost = UE.getEditor('cost');
+</script>
+</body>
+</html>

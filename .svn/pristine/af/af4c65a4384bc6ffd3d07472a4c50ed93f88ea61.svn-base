@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.bnuz.seawas.dao.SignMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.bnuz.seawas.entity.Sign" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="ordersId" property="ordersId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="certId" property="certId" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="INTEGER" />
+    <result column="delFlag" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ordersId, name, sex, age, phone, certId, price, delFlag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sign
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <update id="deleteByPrimaryKey">
+    UPDATE t_sign SET
+    delFlag = #{delFlag}
+    WHERE id = #{id}
+  </update>
+  <insert id="insert" parameterType="cn.edu.bnuz.seawas.entity.Sign" >
+    insert into t_sign (id, ordersId, name, 
+      sex, age, phone, certId, 
+      price, delFlag)
+    values (#{id,jdbcType=VARCHAR}, #{ordersId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{certId,jdbcType=VARCHAR}, 
+      #{price,jdbcType=INTEGER}, #{delFlag})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.bnuz.seawas.entity.Sign" >
+    insert into t_sign
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ordersId != null" >
+        ordersId,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="certId != null" >
+        certId,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="delFlag != null">
+        delFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersId != null" >
+        #{ordersId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="certId != null" >
+        #{certId,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.bnuz.seawas.entity.Sign" >
+    update t_sign
+    <set >
+      <if test="ordersId != null" >
+        ordersId = #{ordersId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="certId != null" >
+        certId = #{certId,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null">
+        delFlag = #{delFlag},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.bnuz.seawas.entity.Sign" >
+    update t_sign
+    set ordersId = #{ordersId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      certId = #{certId,jdbcType=VARCHAR},
+      price = #{price,jdbcType=INTEGER},
+      delFlag = #{delFlag}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 统计某一订单中报名人数 -->
+  <select id="countNumByOrderId" resultType="java.lang.Integer">
+    SELECT COUNT(id)
+    FROM t_sign
+    WHERE ordersId = #{orderId}
+  </select>
+
+  <!-- 通过订单删除报名数据 -->
+  <update id="deleteByOrder">
+    UPDATE t_sign SET
+    delFlag = '1'
+    WHERE ordersId = #{orderId}
+  </update>
+
+  <!-- 通过订单物理删除报名数据 -->
+  <delete id="realDeleteByOrder">
+    DELETE FROM t_sign
+    WHERE ordersId = #{orderId}
+  </delete>
+
+  <!-- 获取订单中的报名信息 -->
+  <select id="findSignByOrder" resultType="cn.edu.bnuz.seawas.entity.Sign">
+    SELECT
+      <include refid="Base_Column_List"/>
+    FROM t_sign
+    WHERE ordersId = #{orderId}
+  </select>
+</mapper>

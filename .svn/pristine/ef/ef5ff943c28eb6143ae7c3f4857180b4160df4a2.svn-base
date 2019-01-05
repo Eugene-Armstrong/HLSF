@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>游记评论</title>
+    <link rel="stylesheet" href="../css/pintuer.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/pintuer.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //点击删除前
+            $("a[href='#yes'], a[href='#no'], th:first, .ckb").hide();
+            //点击删除事件
+            $("a[href='#del']").css("color", "red")
+                .click(function () {
+                    $(this).hide();
+                    $("a[href='#yes'], a[href='#no'], th:first, .ckb").show();
+                });
+            //点击确认删除
+            $("a[href='#yes']").click(function () {
+                var intL = $("input:checked").length; // 获取所有复选框选中项
+                if (intL != 0) { // 如果有选中项
+                    alert("您确定要删除所选的游记评论吗？");
+                    $("input[type=checkbox]").each(function (index) { // 遍历全部复选框的行
+                        if (this.checked) { // 如果选中
+                            $(this).parent("td").parent("tr").remove();// 获取选中的值，并删除对应内容
+                        }
+                    })
+                } else {
+                    alert("请先选中要删除的游记评论！");
+                }
+            });
+            //点击取消删除
+            $("a[href='#no']").click(function () {
+                $("a[href='#yes'], a[href='#no'], th:first, .ckb").hide();
+                $("a[href='#del']").show();
+            });
+            //全选复选框
+            $("input[value='all']").click(function () {
+                if (this.checked) { // 如果自己被选中
+                    $("input[type=checkbox]").prop("checked", true);
+                } else { // 如果自己没被选中
+                    $("input[type=checkbox]").prop("checked", false);
+                }
+            });
+            $(".more").click(function () {
+                $(".dialog-body textarea").val($(this).parent().siblings(".jn-com").find("div").text());
+            })
+        });
+        //点击图片查看大图
+        function myImg(imgObj) {
+            var customDialog = document.getElementsByClassName("custom-dialog");
+            customDialog[0].style.display = "block";
+            var customMask= document.getElementsByClassName("custom-mask");
+            customMask[0].style.display = "block";
+            //背景低亮
+            customMask[0].style.height = document.body.scrollHeight + "px";
+            window.onscroll = function () {
+                customMask[0].style.height = document.body.scrollHeight + "px";
+            };
+            var target = document.getElementById("imgDetail");//新的图片对象
+            target.src = imgObj.src;//获取图片路径（对象已包含原图实际宽高）
+
+            //使大图在恰当的位置显示
+            target.onload = function () {
+                var ml = (document.body.clientWidth - this.width) / 2;
+                var tp = (document.body.clientHeight - this.height) / 2;
+                customDialog[0].style.marginLeft = ml + "px";
+                if (tp >= 0) {
+                    customDialog[0].style.top = tp + "px";
+                } else {
+                    customDialog[0].style.top = "20px";
+                    customDialog[0].style.paddingBottom = "30px";
+                }
+            };
+            //点击关闭事件
+            var cls = function () {
+                customDialog[0].style.display = "none";
+                customMask[0].style.display = "none";
+            };
+            target.onclick = cls;
+            customMask[0].onclick = cls;
+        }
+    </script>
+    <style>
+        select {
+            display: inline !important;
+            margin-left: 10px;
+            width: 30% !important;
+        }
+        .jn-com{
+            width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .line-small img{margin-top: 10px}
+        /*自定义照片大图查看模态框*/
+        .custom-dialog {
+            display: none;
+            background-color: rgba(0, 0, 0, 0) !important;
+            position: absolute;
+            border-radius: 4px;
+            background-color: #fff;
+            max-width: 80%;
+            z-index: 9999;
+        }
+        .custom-mask{
+            position: absolute;
+            display: none;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+
+        img {
+            cursor: pointer
+        }
+    </style>
+</head>
+<body>
+<div class="panel admin-panel">
+    <div class="panel-head">
+        <strong><span class="icon-comments"></span> 游记评论</strong>
+        <select class="input" name="1">
+            <option value="journey1">这是一篇游记</option>
+            <option value="journey2">这是另一篇游记</option>
+            <option value="journey3">这是另另一篇游记</option>
+        </select>
+        <span style="float: right;line-height: 42px">
+            <a class="icon-reply" href="javascript:window.history.back()"
+               style="margin-right:20px"> 返回</a>
+            <a class="icon-trash-o" href="#del" style="margin-right:20px"> 删除游记评论</a>
+            <a href="#yes"> 确认删除</a>&nbsp;
+            <a href="#no" style="margin-right: 20px"> 取消删除</a>
+        </span>
+    </div>
+    <table class="table table-hover text-center">
+        <tr>
+            <th>
+                全选 <input type="checkbox" value="all">
+            </th>
+            <th>用户名</th>
+            <th>评论内容</th>
+            <th>操作</th>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td class="jn-com"><div class="jn-com">我是游记评论我是游记评论，哈哈哈哈哈哈哈</div></td>
+            <td>
+                <a href="#" class="dialogs more" data-toggle="click" data-target="#mydialog" data-mask="1" data-width="50%">
+                    查看更多
+                </a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reply" data-mask="1" data-width="50%">
+                    回复
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td class="jn-com"><div class="jn-com">我是游记评论我是游记评论，哈哈哈哈哈哈哈</div></td>
+            <td>
+                <a href="#" class="dialogs more" data-toggle="click" data-target="#mydialog" data-mask="1" data-width="50%">
+                    查看更多
+                </a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reply" data-mask="1" data-width="50%">
+                    回复
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td class="jn-com"><div class="jn-com">我是游记评论我是游记评论，哈哈哈哈哈哈哈</div></td>
+            <td>
+                <a href="#" class="dialogs more" data-toggle="click" data-target="#mydialog" data-mask="1" data-width="50%">
+                    查看更多
+                </a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reply" data-mask="1" data-width="50%">
+                    回复
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td class="jn-com"><div class="jn-com">我是游记评论我是游记评论，哈哈哈哈哈哈哈</div></td>
+            <td>
+                <a href="#" class="dialogs more" data-toggle="click" data-target="#mydialog" data-mask="1" data-width="50%">
+                    查看更多
+                </a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reply" data-mask="1" data-width="50%">
+                    回复
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td class="jn-com"><div class="jn-com">我是游记评论我是游记评论，哈哈哈哈哈哈哈</div></td>
+            <td>
+                <a href="#" class="dialogs more" data-toggle="click" data-target="#mydialog" data-mask="1" data-width="50%">
+                    查看更多
+                </a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reply" data-mask="1" data-width="50%">
+                    回复
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td class="jn-com"><div class="jn-com">我是游记评论我是游记评论，哈哈哈哈哈哈哈</div></td>
+            <td>
+                <a href="#" class="dialogs more" data-toggle="click" data-target="#mydialog" data-mask="1" data-width="50%">
+                    查看更多
+                </a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reply" data-mask="1" data-width="50%">
+                    回复
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td class="ckb"><input type="checkbox"></td>
+            <td>我不是老王</td>
+            <td class="jn-com"><div class="jn-com">我是游记评论我是游记评论，哈哈哈哈哈哈哈</div></td>
+            <td>
+                <a href="#" class="dialogs more" data-toggle="click" data-target="#mydialog" data-mask="1" data-width="50%">
+                    查看更多
+                </a> /
+                <a href="#" class="dialogs" data-toggle="click" data-target="#reply" data-mask="1" data-width="50%">
+                    回复
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="8">
+                <div class="pagelist"><a href="">上一页</a> <span class="current">1</span><a href="">2</a><a
+                        href="">3</a><a href="">下一页</a><a href="">尾页</a></div>
+            </td>
+        </tr>
+    </table>
+    <!--查看详细游记评论模态框-->
+    <div id="mydialog">
+        <div class="dialog">
+            <div class="dialog-head">
+                <span class="close rotate-hover"></span><strong>详细游记评论</strong>
+            </div>
+            <div class="dialog-body line-small">
+                <textarea rows="3" style="width: 100%" class="input xs12" placeholder="游记评论内容" readonly></textarea>
+                <!--框架原因(选择器获取不到模态框内的img标签)，使用onclick事件实现查看大图-->
+                <img src="../images/pb1.png" class="radius-small xs2" onclick="myImg(this)"/>
+                <img src="../images/pb2.png" class="radius-small xs2" onclick="myImg(this)"/>
+                <img src="../images/pb3.png" class="radius-small xs2" onclick="myImg(this)"/>
+                <img src="../images/pb5.png" class="radius-small xs2" onclick="myImg(this)"/>
+                <img src="../images/pb4.png" class="radius-small xs2" onclick="myImg(this)"/>
+            </div>
+            <div class="dialog-foot">
+                <button class="button dialog-close">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--回复游记评论模态框-->
+    <div id="reply">
+        <div class="dialog">
+            <div class="dialog-head">
+                <span class="close rotate-hover"></span><strong>回复游记评论</strong>
+            </div>
+            <form action="">
+                <div class="dialog-body">
+                    <textarea rows="5" style="width: 100%" class="input" placeholder="请输入回复内容"></textarea>
+                </div>
+                <div class="dialog-foot">
+                    <button class="button border-blue">
+                        发送
+                    </button>
+                    <button class="button dialog-close" type="button">
+                        关闭
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--查看照片原图-->
+<div class="custom-mask"></div>
+<div class="custom-dialog">
+    <img src="" title="返回" class="img-responsive" id="imgDetail" style="max-width: 1000px">
+</div>
+</body>
+</html>

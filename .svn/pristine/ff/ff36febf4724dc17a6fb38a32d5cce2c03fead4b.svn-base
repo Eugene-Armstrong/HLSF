@@ -1,0 +1,88 @@
+package cn.edu.bnuz.seawas.service.admin.user;
+
+import cn.edu.bnuz.seawas.dao.ActivityMapper;
+import cn.edu.bnuz.seawas.dao.UserMapper;
+import cn.edu.bnuz.seawas.entity.Activity;
+import cn.edu.bnuz.seawas.entity.User;
+import cn.edu.bnuz.seawas.vo.LeaderActivityVo;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * Created by Zrj on 2017/7/31.
+ */
+@Service(value = "LeaderService")
+public class LeaderService {
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private ActivityMapper activityMapper;
+
+    public List<User> findLeaderList(User user){
+        return userMapper.findLeaderList(user);
+    }
+
+    /**
+     * 查询领队列表：分页
+     * @param pageNum 当前页
+     * @param pageSize 每页的数量
+     * @param user 查询条件
+     */
+    public PageInfo<User> showLeaderPage(Integer pageNum, Integer pageSize, User user) {
+        pageNum = pageNum == null ? 1 : pageNum;
+        pageSize = pageSize == null ? 1 : pageSize;
+        PageHelper.startPage(pageNum, pageSize);
+        return new PageInfo<User>(userMapper.findLeaderList(user));
+    }
+
+    /**
+     * 获取领队详细信息
+     * @param user
+     * @return 领队全部信息
+     */
+    public User getLeaderdetail(User user){
+        return userMapper.getLeaderdetail(user);
+    }
+
+    /**
+     * 剔除一个领队
+     * @param user
+     * @return
+     */
+    public int deleteLeader(User user){
+        return  userMapper.deleteLeader(user);
+    }
+
+    public PageInfo<LeaderActivityVo> selectActivitiesByLeaderId(Integer pageNum, Integer pageSize,User user){
+        int count = 0;
+        pageNum = pageNum == null ? 1 : pageNum;
+        pageSize = pageSize == null ? 1 : pageSize;
+        PageHelper.startPage(pageNum, pageSize);
+        PageInfo<LeaderActivityVo> activityPageInfo = new PageInfo<LeaderActivityVo>(activityMapper.selectActivitiesByLeaderId(user));
+        for (LeaderActivityVo leaderActivityVo : activityPageInfo.getList()){
+            // 通过：活动id-->订单id-->报名人数
+            int signNum = activityMapper.getActivitySignNumber(leaderActivityVo.getId());
+            activityPageInfo.getList().get(count).setSignNumber(signNum);
+            count++;
+        }
+        return activityPageInfo;
+    }
+
+    /**
+     * 获取领队带领的所有活动
+     * (用于领队信息显示)
+     * @param leaderId
+     * @return
+     */
+    public  List<Activity> getActivityFromLeader(String leaderId, String city){
+        if (leaderId!=null){
+            return activityMapper.selectActivityByLeader(leaderId,city);
+        }
+        return null;
+    }
+
+}

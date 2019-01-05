@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.bnuz.seawas.dao.ActivityLeaderMapper" >
+
+  <resultMap id="BaseResultMap" type="cn.edu.bnuz.seawas.entity.ActivityLeader" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="activityId" property="activityId" jdbcType="VARCHAR" />
+    <result column="leaderId" property="leaderId" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, activityId, leaderId
+  </sql>
+
+  <!--
+                  wifi：添加领队
+  -->
+  <insert id="insertLeader" parameterType="cn.edu.bnuz.seawas.entity.ActivityLeader" >
+    insert into t_activityleader (id, activityId, leaderId
+    )
+    values (#{id,jdbcType=VARCHAR}, #{activityId,jdbcType=VARCHAR}, #{leaderId,jdbcType=VARCHAR}
+    )
+  </insert>
+
+  <!--
+                wifi：删除领队
+  -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_activityleader
+    where activityId = #{actId,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activityleader
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="insertSelective" parameterType="cn.edu.bnuz.seawas.entity.ActivityLeader" >
+    insert into t_activityleader
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="activityId != null" >
+        activityId,
+      </if>
+      <if test="leaderId != null" >
+        leaderId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="leaderId != null" >
+        #{leaderId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.bnuz.seawas.entity.ActivityLeader" >
+    update t_activityleader
+    <set >
+      <if test="activityId != null" >
+        activityId = #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="leaderId != null" >
+        leaderId = #{leaderId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="cn.edu.bnuz.seawas.entity.ActivityLeader" >
+    update t_activityleader
+    set activityId = #{activityId,jdbcType=VARCHAR},
+      leaderId = #{leaderId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findList" resultType="cn.edu.bnuz.seawas.entity.ActivityLeader">
+    SELECT
+      <include refid="Base_Column_List"/>
+    FROM t_activityleader
+    <where>
+      <if test="activityId != null and activityId != ''">
+        activityId = #{activityId}
+      </if>
+      <if test="leaderId != null and leaderId != ''">
+        AND leaderId = #{leaderId}
+      </if>
+    </where>
+  </select>
+
+  <!-- 查询领队带队活动
+      剔除已下架的产品 -->
+  <select id="selectActivitiesByLeaderId" resultType="cn.edu.bnuz.seawas.vo.LeaderActivityVo">
+    SELECT
+		t_activity.id,
+		t_activity.productId AS "product.id",
+		t_product.picUrl AS "product.picUrl",
+		t_product.`name` AS pro_name,
+        t_activity.price,
+		t_activity.departTime,
+		t_activity.gatherPlace,
+		t_activity.tripNumber,
+		t_activity.totalNumber,
+        t_activity.state,
+		t_activity.closeTime,
+		t_activity.endTime,
+		t_activity.QRCode
+    FROM
+        t_activity,t_product,t_activityleader,t_user
+    WHERE
+        t_activity.productId = t_product.id
+	AND t_activityleader.activityId = t_activity.id
+    AND t_activityleader.leaderId = t_user.id
+    AND t_user.id = #{id,jdbcType=VARCHAR}
+    AND t_activity.delFlag != '1'
+    AND t_product.delFlag != '1'
+    ORDER BY t_activity.departTime DESC
+  </select>
+</mapper>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>优惠管理</title>
+    <link rel="stylesheet" href="../css/pintuer.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/pintuer.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var discountSelected = "";
+            //选择优惠传值
+            $("select").change(function () {
+                if($("option:not(first)").is(":selected")){
+                    discountSelected = $(this).find("option:selected").text();
+                    $.ajax({
+                        url: "", // 请求处理页
+                        dataType: "html",
+                        data: {discountSelected: discountSelected},
+                        success: function () {
+                            alert(discountSelected);
+                        }
+                    });
+                }
+            })
+        });
+    </script>
+    <style>
+        td .input{
+            display: inline;
+        }
+        td textarea{
+            color: #999;
+        }
+        td{border-top: 0!important;}
+    </style>
+</head>
+<body>
+<div class="panel admin-panel">
+    <div class="panel-head">
+        <strong><span class="icon-credit-card"></span> 优惠管理</strong>
+    </div>
+    <form action="">
+        <table class="table table-hover">
+        <tr>
+            <td class="text-right">添加优惠：</td>
+            <td>
+                <input type="text" class="input" placeholder="请输入新的优惠名称" required>
+
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right">优惠规则：</td>
+            <td>
+                <input type="text" class="input" placeholder="请输入优惠规则" required>
+                <!--<button class="button border-blue">添加</button>-->
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right">删除优惠：</td>
+            <td>
+                <select class="input">
+                    <option value="xiuxian">优惠1</option>
+                    <option value="huwai">优惠2</option>
+                    <option value="qinzi">优惠3</option>
+
+                </select>
+                <button class="button border-red dialogs" data-toggle="click" data-target="#mydialog" data-mask="1" data-width="50%">
+                    删除
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right">已添加：</td>
+            <td>
+                <textarea rows="3" class="input" readonly>优惠1；优惠2；优惠3</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right"></td>
+            <td>
+                <button type="submit" class="button bg-green">保存</button>
+            </td>
+        </tr>
+    </table>
+    </form>
+    <!--确认删除模态框-->
+    <!--<div id="mydialog">-->
+        <!--<div class="dialog">-->
+            <!--<div class="dialog-head">-->
+                <!--<span class="close rotate-hover"></span><strong>删除优惠</strong>-->
+            <!--</div>-->
+            <!--<div class="dialog-body">-->
+                <!--确定删除此优惠吗？-->
+            <!--</div>-->
+            <!--<div class="dialog-foot">-->
+                <!--<button class="button dialog-close">-->
+                    <!--取消</button>-->
+                <!--<button class="button border-blue">-->
+                    <!--确定</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
+</body>
+</html>

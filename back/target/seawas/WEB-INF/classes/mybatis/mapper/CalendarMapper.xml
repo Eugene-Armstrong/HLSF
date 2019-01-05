@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.edu.bnuz.seawas.dao.CalendarMapper" >
+
+  <resultMap id="activitiesDetailsMap" type="cn.edu.bnuz.seawas.entity.Activity">
+    <id column="id" property="id"/>
+    <!--<result column="productId" property="product.id"/>-->
+    <result column="price" property="price"/>
+    <result column="departTime" property="departTime"/>
+    <result column="gatherPlace" property="gatherPlace"/>
+    <result column="tripNumber" property="tripNumber"/>
+    <result column="totalNumber" property="totalNumber"/>
+    <result column="state" property="state"/>
+    <result column="QRCode" property="QRCode"/>
+    <result column="createTime" property="createTime"/>
+    <result column="createUser" property="createUser.id"/>
+    <result column="updateTime" property="updateTime"/>
+    <result column="updateUser" property="updateUser.id"/>
+    <result column="endTime" property="endTime"/>
+    <result column="closeTime" property="closeTime"/>
+    <result column="onSalePrice" property="onSalePrice"/>
+    <result column="discountRules" property="discountRules"/>
+    <result column="priceIntroduce" property="priceIntroduce"/>
+    <result column="route" property="route"/>
+    <result column="productIntroduce" property="productIntroduce"/>
+    <result column="delFlag" property="delFlag"/>
+
+    <!-- 产品信息 -->
+    <association property="product" javaType="cn.edu.bnuz.seawas.entity.Product">
+      <id column="productId" property="id"/>
+      <result column="pro_name" property="name"/>
+    </association>
+
+    <!-- 创建者信息 -->
+    <!--<association property="createUser" javaType="cn.edu.bnuz.seawas.entity.Admin">-->
+      <!--<id column="createUser" property="id"/>-->
+      <!--<result column="cre_name" property="realName"/>-->
+    <!--</association>-->
+
+    <!-- 修改者信息 -->
+    <!--<association property="updateUser" javaType="cn.edu.bnuz.seawas.entity.Admin">-->
+    <!--<id column="updateUser" property="id"/>-->
+    <!--<result column="upd_name" property="realName"/>-->
+  <!--</association>-->
+
+    <!-- 活动领队 -->
+    <collection property="activityLeaderList" ofType="cn.edu.bnuz.seawas.entity.ActivityLeader">
+      <id column="actLed_id" property="id"/>
+      <result column="id" property="activityId"/>
+      <result column="actLed_ledid" property="leaderId"/>
+
+      <!-- 领队 -->
+      <association property="user" javaType="cn.edu.bnuz.seawas.entity.User">
+        <id column="actLed_ledid" property="id"/>
+        <result column="user_name" property="realName"/>
+        <result column="user_workNo" property="workNo"/>
+      </association>
+    </collection>
+  </resultMap>
+
+    <resultMap id="leaderDetailsMap" type="cn.edu.bnuz.seawas.entity.ActivityLeader">
+        <id column="actLed_id" property="id"/>
+        <result column="actLed_ledid" property="leaderId"/>
+        <!-- 领队 -->
+        <association property="user" javaType="cn.edu.bnuz.seawas.entity.User">
+            <id column="actLed_ledid" property="id"/>
+            <result column="user_name" property="realName"/>
+            <result column="user_workNo" property="workNo"/>
+            <result column="user_score" property="score"/>
+            <result column="user_sex" property="sex"/>
+            <result column="user_age" property="age"/>
+        </association>
+    </resultMap>
+
+    <!--
+                    wifi：根据出发时间查询活动（第一步）
+    -->
+    <select id="selectActivitiesDetailsOneStep" resultMap="activitiesDetailsMap">
+        SELECT
+        t_activity.*,
+        t_product.`name` AS pro_name
+        FROM
+            t_activity,t_product
+                WHERE
+                    t_activity.productId = t_product.id
+                    AND (t_activity.state = '已成行' OR t_activity.state = '未成行' OR t_activity.state = '已满人' OR t_activity.state = '未发布')
+                    AND t_activity.departTime LIKE '%${date}%'
+                    ORDER BY t_activity.state DESC
+    </select>
+
+    <!--
+                    wifi：根据活动id查询领队信息（第二步）
+    -->
+    <select id="selectActivitiesDetailsTwoStep" resultMap="leaderDetailsMap">
+        SELECT
+        t_activityleader.id AS actLed_id,
+        t_activityleader.leaderId AS actLed_ledid,
+        t_user.realName AS user_name,
+        t_user.workNo AS user_workNo,
+        t_user.score AS user_score,
+        t_user.sex AS user_sex,
+        t_user.age AS user_age
+        FROM
+          t_activity,t_activityleader,t_user
+                 WHERE
+                    (t_activity.state = '已成行' OR t_activity.state = '未成行' OR t_activity.state = '已满人' OR t_activity.state = '未发布')
+                    AND t_activity.id = t_activityleader.activityId
+                    AND t_activityleader.leaderId = t_user.id
+                    AND t_activity.id = #{activityId}
+    </select>
+</mapper>

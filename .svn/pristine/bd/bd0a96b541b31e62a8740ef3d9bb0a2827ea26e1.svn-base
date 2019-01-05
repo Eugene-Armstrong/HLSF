@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.bnuz.seawas.dao.EquipmentMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.bnuz.seawas.entity.Equipment" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="INTEGER" />
+    <result column="picUrl" property="picUrl" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, name, price, picUrl
+  </sql>
+
+  <!--
+              wifi：获取装备信息
+  -->
+  <select id="selectEquipmentsMessage" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_equipment
+  </select>
+
+  <!--
+              wifi：删除装备信息
+  -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_equipment
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <!--
+              wifi：添加装备信息
+  -->
+  <insert id="insertSelective" parameterType="cn.edu.bnuz.seawas.entity.Equipment" >
+    insert into t_equipment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="picUrl != null" >
+        picUrl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="picUrl != null" >
+        #{picUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_equipment
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="insert" parameterType="cn.edu.bnuz.seawas.entity.Equipment" >
+    insert into t_equipment (id, name, price, 
+      picUrl)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER},
+      #{picUrl,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.bnuz.seawas.entity.Equipment" >
+    update t_equipment
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="picUrl != null" >
+        picUrl = #{picUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.bnuz.seawas.entity.Equipment" >
+    update t_equipment
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=INTEGER},
+      picUrl = #{picUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!--通过list批量查询装备-->
+  <select id="selectByIdBatch" parameterType="java.util.List" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+     t_equipment
+    <where>
+      id in
+      <foreach item="id" collection="list" separator="," open="(" close=")" >
+        #{id, jdbcType=VARCHAR}
+      </foreach>
+    </where>
+  </select>
+</mapper>

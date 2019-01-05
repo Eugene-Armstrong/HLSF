@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.bnuz.seawas.dao.AlbumMapper">
+
+    <sql id="baseColumns">
+        a.id,
+        a.userId AS "user.id",
+        a.name,
+        a.createTime,
+        a.views
+    </sql>
+
+    <sql id="userJoinColumns">
+        u.nickName AS "user.nickName"
+    </sql>
+
+    <sql id="userJoins">
+        LEFT JOIN t_user u ON a.userId = u.id
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO t_album (
+          id,
+          userId,
+          name,
+          createTime,
+          views
+        ) VALUES (
+          #{id},
+          #{user.id},
+          #{name},
+          #{createTime},
+          #{views}
+        )
+    </insert>
+
+    <select id="findList" resultType="cn.edu.bnuz.seawas.entity.Album">
+        SELECT
+          <include refid="baseColumns"/>,
+          <include refid="userJoinColumns"/>
+        FROM t_album a
+          <include refid="userJoins"/>
+        <where>
+            <if test="user != null">
+                <if test="user.id != null and user.id != ''">
+                    a.userId = #{user.id}
+                </if>
+            </if>
+        </where>
+        ORDER BY a.createTime DESC
+    </select>
+
+    <delete id="delete">
+        DELETE FROM t_album
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 修改相册名 -->
+    <update id="updateAlbumName">
+        UPDATE t_album
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <select id="get" resultType="cn.edu.bnuz.seawas.entity.Album">
+        SELECT
+          <include refid="baseColumns"/>,
+          <include refid="userJoinColumns"/>
+        FROM t_album a
+          <include refid="userJoins"/>
+        <where>
+            a.id = #{id}
+        </where>
+    </select>
+
+    <!-- 添加一次访问量 -->
+    <update id="addViews">
+        UPDATE t_album
+        SET views = views + 1
+        WHERE id = #{id}
+    </update>
+</mapper>

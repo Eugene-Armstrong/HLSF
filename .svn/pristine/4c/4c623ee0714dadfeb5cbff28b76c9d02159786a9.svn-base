@@ -1,0 +1,24 @@
+# weixin4j\u7684\u914D\u7F6E\u6587\u4EF6:\u5982\u679C\u6CA1\u6709\u8BF7\u6784\u9020\u76F8\u5E94\u53C2\u6570\u4F20\u5165 \u5982\u679C\u6709\u8BF7\u4FDD\u8BC1\u5728classpath\u7684\u6839\u76EE\u5F55\u4E0B
+
+# \u516C\u4F17\u53F7\u4FE1\u606F \u8BF7\u6309\u9700\u586B\u5199
+weixin4j.account={"id":"wx7bea66e248fba0e5","secret":"d8ed78ca3a1dd45c5996a7d7f6335411",\
+    "mchId":"1488467832",\
+    "paySignKey":"62a0935b28e94b618a6626c36e6b08ce",\
+    "certificateFile":"C:/apiclient_cert.p12"}
+
+# \u516C\u4F17\u53F7\u5FAE\u4FE1\u7F51\u9875oauth\u6388\u6743\u91CD\u5B9A\u5411\u7684url(\u5728\u4F7F\u7528OauthApi\u65F6\u586B\u5199,\u4E5F\u53EF\u81EA\u5B9A\u4E49\u4F20\u5165)
+
+# \u8BE6\u89C1\uFF1Ahttps://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842&token=&lang=zh_CN
+weixin4j.user.oauth.redirect.uri=http://www.ailangfamily.com/callBack/getMessage
+
+# \u7F51\u7AD9\u626B\u63CF\u767B\u9646oauth\u6388\u6743\u91CD\u5B9A\u5411\u7684url(\u5728\u4F7F\u7528OauthApi\u65F6\u586B\u5199,\u4E5F\u53EF\u81EA\u5B9A\u4E49\u4F20\u5165)
+# \u8BE6\u89C1\uFF1Ahttps://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=&lang=zh_CN
+weixin4j.open.user.oauth.redirect.uri=
+
+# \u7B2C\u4E09\u65B9\u7EC4\u4EF6\u6388\u6743\u91CD\u5B9A\u5411\u7684url(\u5728\u4F7F\u7528ComponentApi\u65F6\u586B\u5199,\u4E5F\u53EF\u81EA\u5B9A\u4E49\u4F20\u5165)
+# \u8BE6\u89C1\uFF1Ahttps://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1453779503&token=&lang=zh_CN
+weixin4j.component.oauth.redirect.uri=
+
+# \u7B2C\u4E09\u65B9\u7EC4\u4EF6\u4EE3\u66FF\u6388\u6743\u516C\u4F17\u53F7\u53D1\u8D77\u7F51\u9875\u6388\u6743\u91CD\u5B9A\u5411\u7684url(\u5728\u4F7F\u7528ComponentApi\u65F6\u586B\u5199,\u4E5F\u53EF\u81EA\u5B9A\u4E49\u4F20\u5165)
+# \u8BE6\u89C1\uFF1Ahttps://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419318590&token=&lang=zh_CN
+weixin4j.component.user.oauth.redirect.uri=
